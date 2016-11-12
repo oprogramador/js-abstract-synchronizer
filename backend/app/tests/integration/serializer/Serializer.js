@@ -38,6 +38,57 @@ describe('Serializer', () => {
       });
   });
 
+  it('resets object', () => {
+    const serializer = new Serializer();
+    const object = {
+      getId() {
+        return this.id;
+      },
+      getName() {
+        return this.name;
+      },
+      getSurname() {
+        return this.surname;
+      },
+      name: 'John',
+      setName(name) {
+        this.name = name;
+      },
+      setSurname(surname) {
+        this.surname = surname;
+      },
+      surname: 'Smith',
+    };
+
+    const serializableObject = serializer.create(object);
+
+    return serializableObject.save()
+      .then(() => {
+        serializableObject.setName('Bob');
+        serializableObject.setSurname('Brown');
+
+        expect(serializableObject.getName()).to.equal('Bob');
+        expect(serializableObject.getSurname()).to.equal('Brown');
+      })
+      .then(() => serializableObject.reset())
+      .then(() => {
+        expect(serializableObject.getName()).to.equal('John');
+        expect(serializableObject.getSurname()).to.equal('Smith');
+      })
+      .then(() => {
+        serializableObject.setName('Tom');
+        serializableObject.setSurname('Johnson');
+
+        expect(serializableObject.getName()).to.equal('Tom');
+        expect(serializableObject.getSurname()).to.equal('Johnson');
+      })
+      .then(() => serializableObject.reset())
+      .then(() => {
+        expect(serializableObject.getName()).to.equal('John');
+        expect(serializableObject.getSurname()).to.equal('Smith');
+      });
+  });
+
   it('reloads object when someone else has changed it', () => {
     const serializer = new Serializer();
     const object = {

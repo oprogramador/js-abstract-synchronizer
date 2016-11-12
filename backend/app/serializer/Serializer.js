@@ -36,7 +36,7 @@ export default class Serializer {
       ));
   }
 
-  reload(object) {
-    return this[privates].collection.firstExample({ id: object.id });
+  reload(id) {
+    return this[privates].collection.firstExample({ id });
   }
 }
