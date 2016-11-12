@@ -126,5 +126,35 @@ describe('Serializer', () => {
       });
   });
 
+  describe('#isDirty', () => {
+    it('returns true when it has some unstored modifications and false otherwise', () => {
+      const serializer = new Serializer();
+      const object = {
+        getName() {
+          return this.name;
+        },
+        name: 'John',
+        setName(name) {
+          this.name = name;
+        },
+      };
+
+      const serializableObject = serializer.create(object);
+
+      expect(serializableObject.isDirty()).to.be.true();
+
+      return serializableObject.save()
+        .then(() => expect(serializableObject.isDirty()).to.be.false())
+        .then(() => serializableObject.setName('Bob'))
+        .then(() => expect(serializableObject.isDirty()).to.be.true())
+        .then(() => serializableObject.reset())
+        .then(() => expect(serializableObject.isDirty()).to.be.false())
+        .then(() => serializableObject.setName('Bob'))
+        .then(() => expect(serializableObject.isDirty()).to.be.true())
+        .then(() => serializableObject.save())
+        .then(() => expect(serializableObject.isDirty()).to.be.false());
+    });
+  });
+
   it('requires security token');
 });

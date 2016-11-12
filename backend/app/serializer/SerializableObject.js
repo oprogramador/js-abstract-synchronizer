@@ -10,13 +10,16 @@ export default class SerializableObject {
     this[privates] = {
       currentData: Object.assign({ id }, _.cloneDeep(object)),
       serializer,
-      storedData: Object.assign({ id }, _.cloneDeep(object)),
+      storedData: {},
     };
     addMethods({ getTargetInnerObject: () => this[privates].currentData, source: object, target: this });
   }
 
   save() {
-    return this[privates].serializer.save(this[privates].currentData);
+    return this[privates].serializer.save(this[privates].currentData)
+      .then(() => {
+        this[privates].storedData = _.cloneDeep(this[privates].currentData);
+      });
   }
 
   reload() {
@@ -29,5 +32,9 @@ export default class SerializableObject {
 
   reset() {
     this[privates].currentData = _.cloneDeep(this[privates].storedData);
+  }
+
+  isDirty() {
+    return !_.isEqual(this[privates].currentData, this[privates].storedData);
   }
 }
