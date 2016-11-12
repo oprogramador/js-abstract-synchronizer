@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  db:
+    build: arangodb
+    ports:
+      - 8529:8529
+    command: arangod
+    environment:
+      ARANGO_ROOT_PASSWORD: ${DB_PASSWORD}
+
+  backend:
+    build: backend
+    ports:
+      - 3001:3000
+    depends_on:
+      - db
+    volumes:
+      - ./package.json:/usr/src/app/package.json
+      - ./backend:/usr/src/app
+    network_mode: host
+    environment:
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: localhost
+      DB_PORT: 8529
