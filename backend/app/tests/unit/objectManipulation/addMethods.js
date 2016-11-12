@@ -21,7 +21,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ source: innerObject, target: person, targetInnerObject: person.innerObject });
+    addMethods({ getTargetInnerObject: () => person.innerObject, source: innerObject, target: person });
     person.older().older();
 
     expect(person.innerObject).to.have.property('age', 2);
@@ -41,7 +41,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ source: innerObject, target: person, targetInnerObject: person.innerObject });
+    addMethods({ getTargetInnerObject: () => person.innerObject, source: innerObject, target: person });
     person.older().older();
 
     expect(person.innerObject).to.have.property('age', 2);
@@ -67,7 +67,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ source: innerObject, target: student, targetInnerObject: student.innerObject });
+    addMethods({ getTargetInnerObject: () => student.innerObject, source: innerObject, target: student });
     student
       .addNotes(2, 2, 6)
       .addNotes(3, 1, 4);
@@ -93,7 +93,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ source: innerObject, target: person, targetInnerObject: person.innerObject });
+    addMethods({ getTargetInnerObject: () => person.innerObject, source: innerObject, target: person });
     person.older().older();
 
     expect(person).to.have.keys('older', 'innerObject');

@@ -10,7 +10,7 @@ export default class SerializableObject {
       innerObject: _.cloneDeep(object),
       serializer,
     };
-    addMethods({ source: object, target: this, targetInnerObject: this[privates].innerObject });
+    addMethods({ getTargetInnerObject: () => this[privates].innerObject, source: object, target: this });
   }
 
   save() {
@@ -24,9 +24,5 @@ export default class SerializableObject {
       .then((newObject) => {
         this[privates].innerObject = newObject;
       });
-  }
-
-  getInnerObject() {
-    return _.cloneDeep(this[privates].innerObject);
   }
 }
