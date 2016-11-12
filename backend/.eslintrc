@@ -18,6 +18,8 @@
     ],
     "new-cap": "off",
     "newline-before-return": "error",
+    "no-param-reassign": "off",
+    "no-plusplus": "off",
     "one-var": [
       "error",
       {

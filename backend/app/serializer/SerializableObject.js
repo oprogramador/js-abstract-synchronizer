@@ -1,8 +1,8 @@
 import _ from 'lodash';
+import addMethods from 'js-abstract-synchronizer/objectManipulation/addMethods';
 import uuid from 'node-uuid';
 
 const privates = Symbol('privates');
-const addMethods = Symbol('addMethods');
 
 export default class SerializableObject {
   constructor({ object, serializer }) {
@@ -10,21 +10,7 @@ export default class SerializableObject {
       innerObject: _.cloneDeep(object),
       serializer,
     };
-    this[addMethods](object);
-  }
-
-  [addMethods](object) {
-    const prototypeMethods = _.difference(
-      Object.getOwnPropertyNames(object.constructor.prototype),
-      [...Object.getOwnPropertyNames(Object.prototype), 'constructor']
-    );
-    const ownMethods = _.filter(Object.keys(object), property => typeof object[property] === 'function');
-    const allMethods = prototypeMethods.concat(ownMethods);
-    allMethods.forEach((methodName) => {
-      this[methodName] = (...args) => {
-        object[methodName].apply(this[privates].innerObject, args);
-      };
-    });
+    addMethods({ source: object, target: this, targetInnerObject: this[privates].innerObject });
   }
 
   save() {
