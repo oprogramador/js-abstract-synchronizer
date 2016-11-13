@@ -79,6 +79,35 @@ describe('addMethods', () => {
     });
   });
 
+  it('adds \'get\' method for Array', () => {
+    const innerObject = ['foo', 'bar', 'baz'];
+    const list = {
+      innerObject: _.cloneDeep(innerObject),
+    };
+
+    addMethods({ getTargetInnerObject: () => list.innerObject, source: innerObject, target: list });
+
+    expect(list.get(0)).to.equal('foo');
+    expect(list.get(1)).to.equal('bar');
+    expect(list.get(2)).to.equal('baz');
+  });
+
+  it('adds \'set\' method for Array', () => {
+    const innerObject = ['foo', 'bar', 'baz'];
+    const list = {
+      innerObject: _.cloneDeep(innerObject),
+    };
+
+    addMethods({ getTargetInnerObject: () => list.innerObject, source: innerObject, target: list });
+
+    list.set(0, 'foo2');
+    list.set(1, 'bar2');
+
+    expect(list.get(0)).to.equal('foo2');
+    expect(list.get(1)).to.equal('bar2');
+    expect(list.get(2)).to.equal('baz');
+  });
+
   it('adds no extra properties', () => {
     const innerObject = {
       age: 0,
