@@ -67,7 +67,7 @@ describe('Serializer', () => {
       .then(() => expect(dave.getName()).to.equal('Dave'));
   });
 
-  it.skip('makes correct references', () => {
+  it('makes correct references', () => {
     const serializer = new Serializer();
     class Person {
       addFriend(person) {
@@ -93,8 +93,8 @@ describe('Serializer', () => {
     return alicia.save()
       .then(() => alicia.reload())
       .then(() => {
-        expect(alicia.getFriends()[0].getName()).to.equal('Bob');
-        expect(alicia.getFriends()[1].getName()).to.equal('Chris');
+        expect(alicia.getFriends().get(0).getName()).to.equal('Bob');
+        expect(alicia.getFriends().get(1).getName()).to.equal('Chris');
       });
   });
 
