@@ -98,7 +98,38 @@ describe('Serializer', () => {
       });
   });
 
-  it('deals with circular references');
+  it('deals with circular references', () => {
+    const serializer = new Serializer();
+    class Person {
+      addFriend(person) {
+        this.friends.push(person);
+      }
+      constructor(name) {
+        this.name = name;
+        this.friends = [];
+      }
+      getName() {
+        return this.name;
+      }
+      setName(name) {
+        this.name = name;
+      }
+    }
+    const alicia = serializer.create(new Person('Alicia'));
+    const bob = serializer.create(new Person('Bob'));
+    const chris = serializer.create(new Person('Chris'));
+    const dave = serializer.create(new Person('Dave'));
+    alicia.addFriend(bob);
+    alicia.addFriend(chris);
+    chris.addFriend(dave);
+    dave.addFriend(alicia);
+
+    return alicia.save()
+      .then(() => dave.setName('Dave234'))
+      .then(() => expect(dave.getName()).to.equal('Dave234'))
+      .then(() => dave.reload())
+      .then(() => expect(dave.getName()).to.equal('Dave'));
+  });
 
   it('resets object', () => {
     const serializer = new Serializer();

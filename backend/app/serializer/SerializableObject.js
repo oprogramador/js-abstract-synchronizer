@@ -50,7 +50,7 @@ export default class SerializableObject {
   save() {
     const objectsToSave = [];
     _.map(this[privates].currentData.data, (value, key) => {
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && !((value instanceof SerializableObject) && value.isBeingSaved())) {
         const child = value instanceof SerializableObject ? value : this[privates].serializer.create(value);
         child.setIsBeingSaved();
         objectsToSave.push(child);
