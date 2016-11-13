@@ -24,7 +24,6 @@ export default class SerializableObject {
     return {
       data: _.cloneDeep(object),
       id: this[privates].id,
-      type: Array.isArray(object) ? 'array' : 'object',
     };
   }
 
@@ -45,7 +44,6 @@ export default class SerializableObject {
     return {
       data,
       id: this[privates].id,
-      type: this[privates].currentData.type,
     };
   }
 
