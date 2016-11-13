@@ -64,16 +64,18 @@ export default class SerializableObject {
   reload() {
     return this[privates].serializer.reload(this[privates].currentData.id)
       .then((newObject) => {
-        const newObjectWithReferences = _.cloneDeep(newObject);
-        _.map(newObjectWithReferences.data, (value, key) => {
-          if (
-              typeof value === 'object'
-                && this[privates].currentData.data[key] instanceof SerializableObject
-                && value.id === this[privates].currentData.data[key].getId()
-            ) {
-            newObjectWithReferences.data[key] = this[privates].currentData.data[key];
+        const newObjectWithReferences = Object.assign(
+          newObject,
+          {
+            data: _.mapValues(newObject.data, (value, key) => {
+              const oldValue = this[privates].currentData.data[key];
+
+              return oldValue instanceof SerializableObject && value.id === oldValue.getId()
+                ? oldValue
+                : value;
+            }),
           }
-        });
+        );
         this[privates].storedData = _.cloneDeep(newObjectWithReferences);
         this[privates].currentData = _.cloneDeep(newObjectWithReferences);
       });
