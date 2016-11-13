@@ -67,6 +67,36 @@ describe('Serializer', () => {
       .then(() => expect(dave.getName()).to.equal('Dave'));
   });
 
+  it('makes correct references', () => {
+    const serializer = new Serializer();
+    class Person {
+      addFriend(person) {
+        this.friends.push(person);
+      }
+      constructor(name) {
+        this.name = name;
+        this.friends = [];
+      }
+      getFriends() {
+        return this.friends;
+      }
+      getName() {
+        return this.name;
+      }
+    }
+    const alicia = serializer.create(new Person('Alicia'));
+    const bob = serializer.create(new Person('Bob'));
+    const chris = serializer.create(new Person('Chris'));
+    alicia.addFriend(bob);
+    alicia.addFriend(chris);
+
+    return alicia.save()
+      .then(() => {
+        expect(alicia.getFriends()[0].getName()).to.equal('Bob');
+        expect(alicia.getFriends()[1].getName()).to.equal('Chris');
+      });
+  });
+
   it('resets object', () => {
     const serializer = new Serializer();
     const object = {
