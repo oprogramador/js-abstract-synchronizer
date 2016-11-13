@@ -67,7 +67,7 @@ describe('Serializer', () => {
       .then(() => expect(dave.getName()).to.equal('Dave'));
   });
 
-  it('makes correct references', () => {
+  it.skip('makes correct references', () => {
     const serializer = new Serializer();
     class Person {
       addFriend(person) {
@@ -91,11 +91,14 @@ describe('Serializer', () => {
     alicia.addFriend(chris);
 
     return alicia.save()
+      .then(() => alicia.reload())
       .then(() => {
         expect(alicia.getFriends()[0].getName()).to.equal('Bob');
         expect(alicia.getFriends()[1].getName()).to.equal('Chris');
       });
   });
+
+  it('deals with circular references');
 
   it('resets object', () => {
     const serializer = new Serializer();
