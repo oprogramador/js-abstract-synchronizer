@@ -1,4 +1,4 @@
-import SerializableObject from 'js-abstract-synchronizer/serializer/SerializableObject';
+import SerializableObjectGenerator from 'js-abstract-synchronizer/serializer/SerializableObject';
 import { db } from 'js-abstract-synchronizer/servicesManager';
 
 const privates = Symbol('privates');
@@ -7,6 +7,7 @@ export default class Serializer {
   constructor() {
     this[privates] = {
       collection: db.collection('all'),
+      SerializableObject: SerializableObjectGenerator(this),
     };
   }
 
@@ -22,7 +23,7 @@ export default class Serializer {
   }
 
   create(object) {
-    const serializableObject = new SerializableObject({ object, serializer: this });
+    const serializableObject = new this[privates].SerializableObject({ object });
 
     return serializableObject;
   }

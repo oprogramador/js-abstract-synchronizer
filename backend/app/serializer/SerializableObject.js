@@ -7,13 +7,12 @@ const saveWithoutReferences = Symbol('saveWithoutReferences');
 const createData = Symbol('createData');
 const getDataToSerialize = Symbol('getDataToSerialize');
 
-export default class SerializableObject {
-  constructor({ object, serializer }) {
+export default serializer => class SerializableObject {
+  constructor({ object }) {
     const id = object.id || uuid.v4();
     this[privates] = {
       id,
       isBeingSaved: false,
-      serializer,
       storedData: {},
     };
     this[privates].currentData = this[createData](object);
@@ -28,7 +27,7 @@ export default class SerializableObject {
   }
 
   [saveWithoutReferences]() {
-    return this[privates].serializer.save(this[getDataToSerialize]())
+    return serializer.save(this[getDataToSerialize]())
       .then(() => {
         this[privates].storedData = this[createData](this[privates].currentData.data);
         this[privates].isBeingSaved = false;
@@ -51,7 +50,7 @@ export default class SerializableObject {
     const objectsToSave = [];
     _.map(this[privates].currentData.data, (value, key) => {
       if (typeof value === 'object' && !((value instanceof SerializableObject) && value.isBeingSaved())) {
-        const child = value instanceof SerializableObject ? value : this[privates].serializer.create(value);
+        const child = value instanceof SerializableObject ? value : serializer.create(value);
         child.setIsBeingSaved();
         objectsToSave.push(child);
         this[privates].currentData.data[key] = child;
@@ -62,7 +61,7 @@ export default class SerializableObject {
   }
 
   reload() {
-    return this[privates].serializer.reload(this[privates].currentData.id)
+    return serializer.reload(this[privates].currentData.id)
       .then((newObject) => {
         const newObjectWithReferences = Object.assign(
           newObject,
@@ -100,4 +99,4 @@ export default class SerializableObject {
   getId() {
     return this[privates].id;
   }
-}
+};
