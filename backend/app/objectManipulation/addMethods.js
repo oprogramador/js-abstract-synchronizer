@@ -10,17 +10,15 @@ const addArrayMethods = ({ getTargetInnerObject, target }) => {
   };
 };
 
-export default ({ getTargetInnerObject, source, target }) => {
-  const prototypeMethods = _.difference(
-    Object.getOwnPropertyNames(source.constructor.prototype),
+export default ({ getTargetInnerObject, prototype, target }) => {
+  const allMethodsNames = _.difference(
+    _.filter(Object.getOwnPropertyNames(prototype), property => typeof prototype[property] === 'function'),
     [...Object.getOwnPropertyNames(Object.prototype), 'constructor']
   );
-  const ownMethods = _.filter(Object.keys(source), property => typeof source[property] === 'function');
-  const allMethods = prototypeMethods.concat(ownMethods);
-  allMethods.forEach((methodName) => {
-    target[methodName] = (...args) => source[methodName].apply(getTargetInnerObject(), args);
+  allMethodsNames.forEach((methodName) => {
+    target[methodName] = (...args) => prototype[methodName].apply(getTargetInnerObject(), args);
   });
-  if (Array.isArray(source)) {
+  if (Array.isArray(prototype)) {
     addArrayMethods({ getTargetInnerObject, target });
   }
 };

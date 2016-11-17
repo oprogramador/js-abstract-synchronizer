@@ -13,17 +13,19 @@ describe('Serializer', () => {
 
   it('saves and reloads object when it is valid', () => {
     const serializer = new Serializer();
-    const object = {
+    class Person {
+      constructor() {
+        this.name = 'John';
+        this.surname = 'Smith';
+      }
       getName() {
         return this.name;
-      },
+      }
       getSurname() {
         return this.surname;
-      },
-      name: 'John',
-      surname: 'Smith',
-    };
-
+      }
+    }
+    const object = new Person();
     const serializableObject = serializer.create(object);
 
     return serializableObject.save()
@@ -133,22 +135,25 @@ describe('Serializer', () => {
 
   it('resets object', () => {
     const serializer = new Serializer();
-    const object = {
+    class Person {
+      constructor() {
+        this.name = 'John';
+        this.surname = 'Smith';
+      }
       getName() {
         return this.name;
-      },
+      }
       getSurname() {
         return this.surname;
-      },
-      name: 'John',
+      }
       setName(name) {
         this.name = name;
-      },
+      }
       setSurname(surname) {
         this.surname = surname;
-      },
-      surname: 'Smith',
-    };
+      }
+    }
+    const object = new Person();
 
     const serializableObject = serializer.create(object);
 
@@ -181,20 +186,23 @@ describe('Serializer', () => {
 
   it('reloads object when someone else has changed it', () => {
     const serializer = new Serializer();
-    const object = {
+    class Person {
+      constructor() {
+        this.id = 'foo';
+        this.name = 'John';
+        this.surname = 'Smith';
+      }
       getName() {
         return this.name;
-      },
+      }
       getSurname() {
         return this.surname;
-      },
-      id: 'foo',
-      name: 'John',
+      }
       setName(name) {
         this.name = name;
-      },
-      surname: 'Smith',
-    };
+      }
+    }
+    const object = new Person();
 
     const serializableObject = serializer.create(object);
     const anotherSerializableObject = serializer.create(object);
@@ -216,16 +224,18 @@ describe('Serializer', () => {
   describe('#isDirty', () => {
     it('returns true when it has some unstored modifications and false otherwise', () => {
       const serializer = new Serializer();
-      const object = {
+      class Person {
+        constructor() {
+          this.name = 'John';
+        }
         getName() {
           return this.name;
-        },
-        name: 'John',
+        }
         setName(name) {
           this.name = name;
-        },
-      };
-
+        }
+      }
+      const object = new Person();
       const serializableObject = serializer.create(object);
 
       expect(serializableObject.isDirty()).to.be.true();

@@ -21,27 +21,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ getTargetInnerObject: () => person.innerObject, source: innerObject, target: person });
-    person.older().older();
-
-    expect(person.innerObject).to.have.property('age', 2);
-  });
-
-  it('adds methods from object', () => {
-    const innerObject = {
-      age: 0,
-
-      older() {
-        this.age++;
-
-        return this;
-      },
-    };
-    const person = {
-      innerObject: _.cloneDeep(innerObject),
-    };
-
-    addMethods({ getTargetInnerObject: () => person.innerObject, source: innerObject, target: person });
+    addMethods({ getTargetInnerObject: () => person.innerObject, prototype: Person.prototype, target: person });
     person.older().older();
 
     expect(person.innerObject).to.have.property('age', 2);
@@ -67,7 +47,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ getTargetInnerObject: () => student.innerObject, source: innerObject, target: student });
+    addMethods({ getTargetInnerObject: () => student.innerObject, prototype: innerObject, target: student });
     student
       .addNotes(2, 2, 6)
       .addNotes(3, 1, 4);
@@ -85,7 +65,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ getTargetInnerObject: () => list.innerObject, source: innerObject, target: list });
+    addMethods({ getTargetInnerObject: () => list.innerObject, prototype: innerObject, target: list });
 
     expect(list.get(0)).to.equal('foo');
     expect(list.get(1)).to.equal('bar');
@@ -98,7 +78,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ getTargetInnerObject: () => list.innerObject, source: innerObject, target: list });
+    addMethods({ getTargetInnerObject: () => list.innerObject, prototype: innerObject, target: list });
 
     list.set(0, 'foo2');
     list.set(1, 'bar2');
@@ -122,7 +102,7 @@ describe('addMethods', () => {
       innerObject: _.cloneDeep(innerObject),
     };
 
-    addMethods({ getTargetInnerObject: () => person.innerObject, source: innerObject, target: person });
+    addMethods({ getTargetInnerObject: () => person.innerObject, prototype: innerObject, target: person });
     person.older().older();
 
     expect(person).to.have.keys('older', 'innerObject');

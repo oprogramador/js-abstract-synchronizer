@@ -16,7 +16,11 @@ export default serializer => class SerializableObject {
       storedData: {},
     };
     this[privates].currentData = this[createData](object);
-    addMethods({ getTargetInnerObject: () => this[privates].currentData.data, source: object, target: this });
+    addMethods({
+      getTargetInnerObject: () => this[privates].currentData.data,
+      prototype: object.constructor.prototype,
+      target: this,
+    });
   }
 
   [createData](object) {
