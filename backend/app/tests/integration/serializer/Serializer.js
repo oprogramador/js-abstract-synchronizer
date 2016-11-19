@@ -12,7 +12,6 @@ describe('Serializer', () => {
   });
 
   it('saves and reloads object when it is valid', () => {
-    const serializer = new Serializer();
     class Person {
       constructor() {
         this.name = 'John';
@@ -25,6 +24,11 @@ describe('Serializer', () => {
         return this.surname;
       }
     }
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+    });
     const object = new Person();
     const serializableObject = serializer.create(object);
 
@@ -38,7 +42,6 @@ describe('Serializer', () => {
   });
 
   it('saves referenced objects', () => {
-    const serializer = new Serializer();
     class Person {
       addFriend(person) {
         this.friends.push(person);
@@ -54,6 +57,11 @@ describe('Serializer', () => {
         this.name = name;
       }
     }
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+    });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
@@ -70,7 +78,6 @@ describe('Serializer', () => {
   });
 
   it('makes correct references', () => {
-    const serializer = new Serializer();
     class Person {
       addFriend(person) {
         this.friends.push(person);
@@ -86,6 +93,12 @@ describe('Serializer', () => {
         return this.name;
       }
     }
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Person: Person.prototype,
+      },
+    });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
@@ -100,8 +113,7 @@ describe('Serializer', () => {
       });
   });
 
-  it.skip('uses prototype methods in clone', () => {
-    const serializer = new Serializer();
+  it('uses prototype methods in clone', () => {
     class Person {
       addFriend(person) {
         this.friends.push(person);
@@ -117,6 +129,12 @@ describe('Serializer', () => {
         return this.name;
       }
     }
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Person: Person.prototype,
+      },
+    });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
@@ -129,6 +147,9 @@ describe('Serializer', () => {
         newAlicia = serializer.create({ id: alicia.getId() });
       })
       .then(() => newAlicia.reload())
+      .then(() => newAlicia.getFriends().reload())
+      .then(() => newAlicia.getFriends().get(0).reload())
+      .then(() => newAlicia.getFriends().get(1).reload())
       .then(() => {
         expect(newAlicia.getFriends().get(0).getName()).to.equal('Bob');
         expect(newAlicia.getFriends().get(1).getName()).to.equal('Chris');
@@ -136,7 +157,6 @@ describe('Serializer', () => {
   });
 
   it('deals with circular references', () => {
-    const serializer = new Serializer();
     class Person {
       addFriend(person) {
         this.friends.push(person);
@@ -152,6 +172,12 @@ describe('Serializer', () => {
         this.name = name;
       }
     }
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Person: Person.prototype,
+      },
+    });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
@@ -169,7 +195,6 @@ describe('Serializer', () => {
   });
 
   it('resets object', () => {
-    const serializer = new Serializer();
     class Person {
       constructor() {
         this.name = 'John';
@@ -188,6 +213,11 @@ describe('Serializer', () => {
         this.surname = surname;
       }
     }
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+    });
     const object = new Person();
 
     const serializableObject = serializer.create(object);
@@ -220,7 +250,6 @@ describe('Serializer', () => {
   });
 
   it('reloads object when someone else has changed it', () => {
-    const serializer = new Serializer();
     class Person {
       constructor() {
         this.id = 'foo';
@@ -237,6 +266,11 @@ describe('Serializer', () => {
         this.name = name;
       }
     }
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+    });
     const object = new Person();
 
     const serializableObject = serializer.create(object);
@@ -258,7 +292,6 @@ describe('Serializer', () => {
 
   describe('#isDirty', () => {
     it('returns true when it has some unstored modifications and false otherwise', () => {
-      const serializer = new Serializer();
       class Person {
         constructor() {
           this.name = 'John';
@@ -270,6 +303,11 @@ describe('Serializer', () => {
           this.name = name;
         }
       }
+      const serializer = new Serializer({
+        prototypes: {
+          Person: Person.prototype,
+        },
+      });
       const object = new Person();
       const serializableObject = serializer.create(object);
 

@@ -8,11 +8,12 @@ const createData = Symbol('createData');
 const getDataToSerialize = Symbol('getDataToSerialize');
 
 export default serializer => class SerializableObject {
-  constructor({ object }) {
+  constructor({ object, prototypeName }) {
     const id = object.id || uuid.v4();
     this[privates] = {
       id,
       isBeingSaved: false,
+      prototypeName,
       storedData: {},
     };
     this[privates].currentData = this[createData](object);
@@ -47,6 +48,7 @@ export default serializer => class SerializableObject {
     return {
       data,
       id: this[privates].id,
+      prototypeName: this[privates].prototypeName,
     };
   }
 
@@ -75,12 +77,17 @@ export default serializer => class SerializableObject {
 
               return oldValue instanceof SerializableObject && value.id === oldValue.getId()
                 ? oldValue
-                : value;
+                : serializer.create(value);
             }),
           }
         );
         this[privates].storedData = _.cloneDeep(newObjectWithReferences);
         this[privates].currentData = _.cloneDeep(newObjectWithReferences);
+        addMethods({
+          getTargetInnerObject: () => this[privates].currentData.data,
+          prototype: serializer.getPrototype(newObject.prototypeName),
+          target: this,
+        });
       });
   }
 

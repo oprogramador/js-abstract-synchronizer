@@ -1,12 +1,23 @@
 import SerializableObjectGenerator from 'js-abstract-synchronizer/serializer/SerializableObject';
+import _ from 'lodash';
 import { db } from 'js-abstract-synchronizer/servicesManager';
 
 const privates = Symbol('privates');
 
+const simpleTypes = [
+  Number,
+  String,
+  Boolean,
+];
+
 export default class Serializer {
-  constructor() {
+  constructor({ prototypes = {} } = {}) {
+    const namesToPrototypesMap = new Map(_.map(prototypes, (value, key) => [key, value]));
+    const prototypesToNamesMap = new Map(_.map(prototypes, (value, key) => [value, key]));
     this[privates] = {
       collection: db.collection('all'),
+      namesToPrototypesMap,
+      prototypesToNamesMap,
       SerializableObject: SerializableObjectGenerator(this),
     };
   }
@@ -23,7 +34,14 @@ export default class Serializer {
   }
 
   create(object) {
-    const serializableObject = new this[privates].SerializableObject({ object });
+    if (object instanceof this[privates].SerializableObject) {
+      return object;
+    }
+    if (simpleTypes.includes(object.constructor)) {
+      return object;
+    }
+    const prototypeName = this.getPrototypeName(object.constructor.prototype);
+    const serializableObject = new this[privates].SerializableObject({ object, prototypeName });
 
     return serializableObject;
   }
@@ -39,5 +57,15 @@ export default class Serializer {
 
   reload(id) {
     return this[privates].collection.firstExample({ id });
+  }
+
+  getPrototype(prototypeName) {
+    const result = this[privates].namesToPrototypesMap.get(prototypeName);
+
+    return result;
+  }
+
+  getPrototypeName(prototype) {
+    return this[privates].prototypesToNamesMap.get(prototype);
   }
 }
