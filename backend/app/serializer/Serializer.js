@@ -1,6 +1,5 @@
 import SerializableObjectGenerator from 'js-abstract-synchronizer/serializer/SerializableObject';
 import _ from 'lodash';
-import { db } from 'js-abstract-synchronizer/servicesManager';
 
 const privates = Symbol('privates');
 
@@ -11,26 +10,15 @@ const simpleTypes = [
 ];
 
 export default class Serializer {
-  constructor({ prototypes = {} } = {}) {
+  constructor({ prototypes = {}, serializerImplementation }) {
     const namesToPrototypesMap = new Map(_.map(prototypes, (value, key) => [key, value]));
     const prototypesToNamesMap = new Map(_.map(prototypes, (value, key) => [value, key]));
     this[privates] = {
-      collection: db.collection('all'),
       namesToPrototypesMap,
       prototypesToNamesMap,
       SerializableObject: SerializableObjectGenerator(this),
+      serializerImplementation,
     };
-  }
-
-  createDatabase(name) {
-    db.useDatabase('_system');
-
-    return db.createDatabase(name)
-      .then(() => db.useDatabase(name));
-  }
-
-  createCollection() {
-    return this[privates].collection.create();
   }
 
   create(object) {
@@ -47,16 +35,11 @@ export default class Serializer {
   }
 
   save(object) {
-    return this[privates].collection.replaceByExample({ id: object.id }, object)
-      .then(result => (
-        result.replaced === 0
-          ? this[privates].collection.save(object)
-          : null
-      ));
+    return this[privates].serializerImplementation.save(object);
   }
 
   reload(id) {
-    return this[privates].collection.firstExample({ id });
+    return this[privates].serializerImplementation.reload(id);
   }
 
   getPrototype(prototypeName) {

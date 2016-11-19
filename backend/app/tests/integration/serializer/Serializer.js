@@ -1,14 +1,15 @@
+import ArangoSerializer from 'js-abstract-synchronizer/serializer/ArangoSerializer';
 import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import expect from 'js-abstract-synchronizer/tests/expect';
 import faker from 'faker';
 
+const arangoSerializer = new ArangoSerializer();
+
 describe('Serializer', () => {
   beforeEach('recreate database', () => {
-    const serializer = new Serializer();
     const newDatabaseName = `test-${faker.random.uuid()}`;
 
-    return serializer.createDatabase(newDatabaseName)
-      .then(() => serializer.createCollection());
+    return arangoSerializer.configure(newDatabaseName);
   });
 
   it('saves and reloads object when it is valid', () => {
@@ -28,6 +29,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
+      serializerImplementation: arangoSerializer,
     });
     const object = new Person();
     const serializableObject = serializer.create(object);
@@ -61,6 +63,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
+      serializerImplementation: arangoSerializer,
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -98,6 +101,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
+      serializerImplementation: arangoSerializer,
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -134,6 +138,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
+      serializerImplementation: arangoSerializer,
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -177,6 +182,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
+      serializerImplementation: arangoSerializer,
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -217,6 +223,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
+      serializerImplementation: arangoSerializer,
     });
     const object = new Person();
 
@@ -270,6 +277,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
+      serializerImplementation: arangoSerializer,
     });
     const object = new Person();
 
@@ -307,6 +315,7 @@ describe('Serializer', () => {
         prototypes: {
           Person: Person.prototype,
         },
+        serializerImplementation: arangoSerializer,
       });
       const object = new Person();
       const serializableObject = serializer.create(object);
