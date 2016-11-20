@@ -1,29 +1,12 @@
+import InMemorySerializer from
+  'js-abstract-synchronizer/tests/integration/serializer/helpers/InMemorySerializer';
 import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import expect from 'js-abstract-synchronizer/tests/expect';
-import runSerializerBasicTests from 'js-abstract-synchronizer/tests/integration/serializer/runSerializerBasicTests';
-
-class SerializerImplementation {
-  constructor() {
-    this.data = {};
-  }
-
-  configure() {
-    return Promise.resolve();
-  }
-
-  save(object) {
-    this.data[object.id] = object;
-
-    return Promise.resolve();
-  }
-
-  reload(id) {
-    return Promise.resolve(this.data[id]);
-  }
-}
+import runSerializerBasicTests from
+  'js-abstract-synchronizer/tests/integration/serializer/helpers/runSerializerBasicTests';
 
 describe('Serializer', () => {
-  runSerializerBasicTests(SerializerImplementation);
+  runSerializerBasicTests(InMemorySerializer);
 
   it('saves referenced objects', () => {
     class Person {
@@ -45,7 +28,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
-      serializerImplementation: new SerializerImplementation(),
+      serializerImplementation: new InMemorySerializer(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -83,7 +66,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
-      serializerImplementation: new SerializerImplementation(),
+      serializerImplementation: new InMemorySerializer(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -120,7 +103,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
-      serializerImplementation: new SerializerImplementation(),
+      serializerImplementation: new InMemorySerializer(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -164,7 +147,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
-      serializerImplementation: new SerializerImplementation(),
+      serializerImplementation: new InMemorySerializer(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -205,7 +188,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
-      serializerImplementation: new SerializerImplementation(),
+      serializerImplementation: new InMemorySerializer(),
     });
     const object = new Person();
 
@@ -255,7 +238,7 @@ describe('Serializer', () => {
         prototypes: {
           Person: Person.prototype,
         },
-        serializerImplementation: new SerializerImplementation(),
+        serializerImplementation: new InMemorySerializer(),
       });
       const object = new Person();
       const serializableObject = serializer.create(object);
