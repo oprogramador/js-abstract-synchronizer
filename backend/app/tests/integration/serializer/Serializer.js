@@ -1,47 +1,29 @@
-import ArangoSerializer from 'js-abstract-synchronizer/serializer/ArangoSerializer';
 import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import expect from 'js-abstract-synchronizer/tests/expect';
-import faker from 'faker';
+import runSerializerBasicTests from 'js-abstract-synchronizer/tests/integration/serializer/runSerializerBasicTests';
 
-const arangoSerializer = new ArangoSerializer();
+class SerializerImplementation {
+  constructor() {
+    this.data = {};
+  }
+
+  configure() {
+    return Promise.resolve();
+  }
+
+  save(object) {
+    this.data[object.id] = object;
+
+    return Promise.resolve();
+  }
+
+  reload(id) {
+    return Promise.resolve(this.data[id]);
+  }
+}
 
 describe('Serializer', () => {
-  beforeEach('recreate database', () => {
-    const newDatabaseName = `test-${faker.random.uuid()}`;
-
-    return arangoSerializer.configure(newDatabaseName);
-  });
-
-  it('saves and reloads object when it is valid', () => {
-    class Person {
-      constructor() {
-        this.name = 'John';
-        this.surname = 'Smith';
-      }
-      getName() {
-        return this.name;
-      }
-      getSurname() {
-        return this.surname;
-      }
-    }
-    const serializer = new Serializer({
-      prototypes: {
-        Person: Person.prototype,
-      },
-      serializerImplementation: arangoSerializer,
-    });
-    const object = new Person();
-    const serializableObject = serializer.create(object);
-
-    return serializableObject.save()
-      .then(() => serializableObject.reload())
-      .then(() => {
-        expect(serializableObject.getId()).to.be.a('string');
-        expect(serializableObject.getName()).to.equal('John');
-        expect(serializableObject.getSurname()).to.equal('Smith');
-      });
-  });
+  runSerializerBasicTests(SerializerImplementation);
 
   it('saves referenced objects', () => {
     class Person {
@@ -63,7 +45,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
-      serializerImplementation: arangoSerializer,
+      serializerImplementation: new SerializerImplementation(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -101,7 +83,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
-      serializerImplementation: arangoSerializer,
+      serializerImplementation: new SerializerImplementation(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -138,7 +120,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
-      serializerImplementation: arangoSerializer,
+      serializerImplementation: new SerializerImplementation(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -182,7 +164,7 @@ describe('Serializer', () => {
         Array: Array.prototype,
         Person: Person.prototype,
       },
-      serializerImplementation: arangoSerializer,
+      serializerImplementation: new SerializerImplementation(),
     });
     const alicia = serializer.create(new Person('Alicia'));
     const bob = serializer.create(new Person('Bob'));
@@ -223,7 +205,7 @@ describe('Serializer', () => {
       prototypes: {
         Person: Person.prototype,
       },
-      serializerImplementation: arangoSerializer,
+      serializerImplementation: new SerializerImplementation(),
     });
     const object = new Person();
 
@@ -256,48 +238,6 @@ describe('Serializer', () => {
       });
   });
 
-  it('reloads object when someone else has changed it', () => {
-    class Person {
-      constructor() {
-        this.id = 'foo';
-        this.name = 'John';
-        this.surname = 'Smith';
-      }
-      getName() {
-        return this.name;
-      }
-      getSurname() {
-        return this.surname;
-      }
-      setName(name) {
-        this.name = name;
-      }
-    }
-    const serializer = new Serializer({
-      prototypes: {
-        Person: Person.prototype,
-      },
-      serializerImplementation: arangoSerializer,
-    });
-    const object = new Person();
-
-    const serializableObject = serializer.create(object);
-    const anotherSerializableObject = serializer.create(object);
-
-    return serializableObject.save()
-      .then(() => {
-        anotherSerializableObject.setName('Vanessa');
-
-        return anotherSerializableObject.save();
-      })
-      .then(() => serializableObject.reload())
-      .then(() => {
-        expect(serializableObject.getId()).to.equal('foo');
-        expect(serializableObject.getName()).to.equal('Vanessa');
-        expect(serializableObject.getSurname()).to.equal('Smith');
-      });
-  });
-
   describe('#isDirty', () => {
     it('returns true when it has some unstored modifications and false otherwise', () => {
       class Person {
@@ -315,7 +255,7 @@ describe('Serializer', () => {
         prototypes: {
           Person: Person.prototype,
         },
-        serializerImplementation: arangoSerializer,
+        serializerImplementation: new SerializerImplementation(),
       });
       const object = new Person();
       const serializableObject = serializer.create(object);
