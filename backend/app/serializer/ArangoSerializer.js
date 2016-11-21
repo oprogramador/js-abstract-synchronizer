@@ -1,3 +1,5 @@
+import NotFoundError from 'js-abstract-synchronizer/errors/NotFoundError';
+import arangoErrorCodes from 'arangodb-error-codes';
 import { db } from 'js-abstract-synchronizer/servicesManager';
 
 const privates = Symbol('privates');
@@ -27,6 +29,11 @@ export default class ArangoSerializer {
   }
 
   reload(id) {
-    return this[privates].collection.firstExample({ id });
+    return this[privates].collection.firstExample({ id })
+      .catch(error => Promise.reject(
+        error.errorNum === arangoErrorCodes.ERROR_HTTP_NOT_FOUND
+          ? new NotFoundError()
+          : error
+      ));
   }
 }

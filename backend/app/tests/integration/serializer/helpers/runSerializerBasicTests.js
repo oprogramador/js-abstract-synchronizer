@@ -1,3 +1,4 @@
+import NotFoundError from 'js-abstract-synchronizer/errors/NotFoundError';
 import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import expect from 'js-abstract-synchronizer/tests/expect';
 import faker from 'faker';
@@ -10,7 +11,16 @@ export default (serializerImplementationClass) => {
   });
 
   describe('#reload', () => {
-    it('rejects when object is not found');
+    it('rejects when object is not found', () => {
+      const serializer = new Serializer({
+        prototypes: {},
+        serializerImplementation: new serializerImplementationClass(),
+      });
+
+      const serializableObject = serializer.create({ id: 'non-existent' });
+
+      return expect(serializableObject.reload()).to.be.rejectedWith(NotFoundError);
+    });
   });
 
   it('saves and reloads object', () => {

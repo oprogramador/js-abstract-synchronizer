@@ -1,3 +1,5 @@
+import NotFoundError from 'js-abstract-synchronizer/errors/NotFoundError';
+
 export default class InMemorySerializer {
   constructor() {
     this.data = {};
@@ -14,6 +16,6 @@ export default class InMemorySerializer {
   }
 
   reload(id) {
-    return Promise.resolve(this.data[id]);
+    return this.data[id] ? Promise.resolve(this.data[id]) : Promise.reject(new NotFoundError());
   }
 }
