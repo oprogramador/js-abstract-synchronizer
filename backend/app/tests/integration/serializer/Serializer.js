@@ -8,6 +8,18 @@ import runSerializerBasicTests from
 describe('Serializer', () => {
   runSerializerBasicTests(InMemorySerializer);
 
+  it('returns no extra fields');
+  it('uses provided id');
+  it('works with with \'configure\' calling multiple times');
+
+  describe('#getStoredData', () => {
+    it('returns proper data');
+  });
+
+  describe('#getCurrentData', () => {
+    it('returns proper data');
+  });
+
   it('saves referenced objects', () => {
     class Person {
       addFriend(person) {

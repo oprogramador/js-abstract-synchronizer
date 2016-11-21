@@ -83,11 +83,14 @@ export default serializer => class SerializableObject {
         );
         this[privates].storedData = _.cloneDeep(newObjectWithReferences);
         this[privates].currentData = _.cloneDeep(newObjectWithReferences);
-        addMethods({
-          getTargetInnerObject: () => this[privates].currentData.data,
-          prototype: serializer.getPrototype(newObject.prototypeName),
-          target: this,
-        });
+        const proto = serializer.getPrototype(newObject.prototypeName);
+        if (proto) {
+          addMethods({
+            getTargetInnerObject: () => this[privates].currentData.data,
+            prototype: proto,
+            target: this,
+          });
+        }
       });
   }
 
@@ -109,5 +112,13 @@ export default serializer => class SerializableObject {
 
   getId() {
     return this[privates].id;
+  }
+
+  getStoredData() {
+    return this[privates].storedData;
+  }
+
+  getCurrentData() {
+    return this[privates].currentData;
   }
 };

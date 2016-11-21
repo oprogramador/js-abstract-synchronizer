@@ -17,4 +17,3 @@ export default class InMemorySerializer {
     return Promise.resolve(this.data[id]);
   }
 }
-

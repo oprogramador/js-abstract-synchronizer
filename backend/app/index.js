@@ -1,11 +1,21 @@
+import ArangoSerializer from 'js-abstract-synchronizer/serializer/ArangoSerializer';
 import ExpressBunyanLogger from 'express-bunyan-logger';
-import express from 'express';
+import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
+import createApp from 'js-abstract-synchronizer/routing/createApp';
 import { logger } from 'js-abstract-synchronizer/servicesManager';
 
-const PORT = 3000;
-const app = express();
-app.use(ExpressBunyanLogger());
-app.get('/', (req, res) => res.json({ success: true }));
-app.listen(PORT);
+const serializerImplementation = new ArangoSerializer();
+const serializer = new Serializer({
+  serializerImplementation,
+});
 
-logger.info(`Running on http://localhost: ${PORT}`);
+serializerImplementation.configure('db')
+  .then(() => {
+    const port = 3000;
+    const app = createApp({
+      loggerMiddleware: ExpressBunyanLogger(),
+      serializer,
+    });
+    app.listen(port);
+    logger.info(`Running on http://localhost: ${port}`);
+  });

@@ -9,6 +9,10 @@ export default (serializerImplementationClass) => {
     return new serializerImplementationClass().configure(newDatabaseName);
   });
 
+  describe('#reload', () => {
+    it('rejects when object is not found');
+  });
+
   it('saves and reloads object', () => {
     class Person {
       constructor() {
