@@ -9,7 +9,40 @@ describe('Serializer', () => {
   runSerializerBasicTests(InMemorySerializer);
 
   it('returns no extra fields');
-  it('uses provided id');
+  it('rejects with unique containt validation error when id repeats');
+
+  it('uses provided id when it is provided', () => {
+    class Person {
+      constructor({ id, name }) {
+        this.id = id;
+        this.name = name;
+      }
+    }
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+    const alicia = serializer.create(new Person({ id: 'a', name: 'Alicia' }));
+    const bob = serializer.create(new Person({ id: 'b', name: 'Bob' }));
+    const chris = serializer.create(new Person({ name: 'Chris' }));
+    const dave = serializer.create(new Person({ name: 'Dave' }));
+
+    expect(alicia.getId()).to.equal('a');
+    expect(bob.getId()).to.equal('b');
+    expect(chris.getId()).to.be.a('string');
+    expect(dave.getId()).to.be.a('string');
+
+    return alicia.save()
+      .then(() => {
+        expect(alicia.getId()).to.equal('a');
+        expect(bob.getId()).to.equal('b');
+        expect(chris.getId()).to.be.a('string');
+        expect(dave.getId()).to.be.a('string');
+      });
+  });
+
   it('works with with \'configure\' calling multiple times');
 
   describe('#getStoredData', () => {
