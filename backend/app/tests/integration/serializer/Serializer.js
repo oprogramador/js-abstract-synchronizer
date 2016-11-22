@@ -8,8 +8,6 @@ import runSerializerBasicTests from
 describe('Serializer', () => {
   runSerializerBasicTests(InMemorySerializer);
 
-  it('rejects with unique containt validation error when id repeats');
-
   it('uses provided id when it is provided', () => {
     class Person {
       constructor({ id, name }) {
