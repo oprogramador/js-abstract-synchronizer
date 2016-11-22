@@ -70,10 +70,11 @@ export default serializer => class SerializableObject {
   reload() {
     return serializer.reload(this[privates].currentData.id)
       .then((newObject) => {
+        const filteredObject = _.pick(newObject, ['id', 'data', 'prototypeName']);
         const newObjectWithReferences = Object.assign(
-          newObject,
+          filteredObject,
           {
-            data: _.mapValues(newObject.data, (value, key) => {
+            data: _.mapValues(filteredObject.data, (value, key) => {
               const oldValue = this[privates].currentData.data[key];
 
               return oldValue instanceof SerializableObject && value.id === oldValue.getId()
@@ -84,7 +85,7 @@ export default serializer => class SerializableObject {
         );
         this[privates].storedData = _.cloneDeep(newObjectWithReferences);
         this[privates].currentData = _.cloneDeep(newObjectWithReferences);
-        const proto = serializer.getPrototype(newObject.prototypeName);
+        const proto = serializer.getPrototype(filteredObject.prototypeName);
         if (proto) {
           addMethods({
             getTargetInnerObject: () => this[privates].currentData.data,
