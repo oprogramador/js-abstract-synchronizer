@@ -45,12 +45,74 @@ describe('Serializer', () => {
 
   it('works with with \'configure\' calling multiple times');
 
-  describe('#getStoredData', () => {
-    it('returns proper data');
+  describe('#getSerializedStoredData', () => {
+    it('returns proper data', () => {
+      class Person {
+        constructor() {
+          this.name = 'John';
+          this.surname = 'Smith';
+        }
+      }
+      const serializer = new Serializer({
+        prototypes: {
+          Person: Person.prototype,
+        },
+        serializerImplementation: new InMemorySerializer(),
+      });
+      const object = new Person();
+      const serializableObject = serializer.create(object);
+
+      expect(JSON.parse(serializableObject.getSerializedStoredData())).to.be.null();
+
+      const expectedData = {
+        data: {
+          name: 'John',
+          surname: 'Smith',
+        },
+        id: serializableObject.getId(),
+        prototypeName: 'Person',
+      };
+
+      return serializableObject.save()
+        .then(() => expect(JSON.parse(serializableObject.getSerializedStoredData())).to.deep.equal(expectedData))
+        .then(() => serializableObject.reload())
+        .then(() => expect(JSON.parse(serializableObject.getSerializedStoredData())).to.deep.equal(expectedData));
+    });
   });
 
-  describe('#getCurrentData', () => {
-    it('returns proper data');
+  describe('#getSerializedCurrentData', () => {
+    it('returns proper data', () => {
+      class Person {
+        constructor() {
+          this.name = 'John';
+          this.surname = 'Smith';
+        }
+      }
+      const serializer = new Serializer({
+        prototypes: {
+          Person: Person.prototype,
+        },
+        serializerImplementation: new InMemorySerializer(),
+      });
+      const object = new Person();
+      const serializableObject = serializer.create(object);
+
+      const expectedData = {
+        data: {
+          name: 'John',
+          surname: 'Smith',
+        },
+        id: serializableObject.getId(),
+        prototypeName: 'Person',
+      };
+
+      expect(JSON.parse(serializableObject.getSerializedCurrentData())).to.deep.equal(expectedData);
+
+      return serializableObject.save()
+        .then(() => expect(JSON.parse(serializableObject.getSerializedCurrentData())).to.deep.equal(expectedData))
+        .then(() => serializableObject.reload())
+        .then(() => expect(JSON.parse(serializableObject.getSerializedCurrentData())).to.deep.equal(expectedData));
+    });
   });
 
   it('saves referenced objects', () => {

@@ -10,13 +10,13 @@ export default ({ loggerMiddleware, serializer }) => {
     .get('/object/:id', (req, res) => {
       const object = serializer.create({ id: req.params.id });
       object.reload()
-        .then(() => res.json(object.getStoredData()))
+        .then(() => res.json(JSON.parse(object.getSerializedStoredData())))
         .catch(() => res.status(HTTPStatus.NOT_FOUND).end());
     })
     .post('/object', (req, res) => {
       const object = serializer.create(req.body);
       object.save()
-        .then(() => res.json(object.getStoredData()))
+        .then(() => res.json(JSON.parse(object.getSerializedStoredData())))
         .catch(() => res.status(HTTPStatus.NOT_FOUND).end());
     });
 

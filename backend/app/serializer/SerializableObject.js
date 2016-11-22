@@ -14,7 +14,7 @@ export default serializer => class SerializableObject {
       id,
       isBeingSaved: false,
       prototypeName,
-      storedData: {},
+      storedData: null,
     };
     this[privates].currentData = this[createData](object);
     addMethods({
@@ -28,6 +28,7 @@ export default serializer => class SerializableObject {
     return {
       data: _.cloneDeep(object),
       id: this[privates].id,
+      prototypeName: this[privates].prototypeName,
     };
   }
 
@@ -114,11 +115,11 @@ export default serializer => class SerializableObject {
     return this[privates].id;
   }
 
-  getStoredData() {
-    return this[privates].storedData;
+  getSerializedStoredData() {
+    return JSON.stringify(this[privates].storedData);
   }
 
-  getCurrentData() {
-    return this[privates].currentData;
+  getSerializedCurrentData() {
+    return JSON.stringify(this[privates].currentData);
   }
 };
