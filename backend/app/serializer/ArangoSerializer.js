@@ -3,6 +3,11 @@ import arangoErrorCodes from 'arangodb-error-codes';
 import { db } from 'js-abstract-synchronizer/servicesManager';
 
 const privates = Symbol('privates');
+const handleDuplicateName = error => (
+  error.errorNum === arangoErrorCodes.ERROR_ARANGO_DUPLICATE_NAME
+    ? Promise.resolve()
+    : Promise.reject(error)
+);
 
 export default class ArangoSerializer {
   constructor() {
@@ -15,8 +20,10 @@ export default class ArangoSerializer {
     db.useDatabase('_system');
 
     return db.createDatabase(dbName)
+      .catch(handleDuplicateName)
       .then(() => db.useDatabase(dbName))
-      .then(() => this[privates].collection.create());
+      .then(() => this[privates].collection.create())
+      .catch(handleDuplicateName);
   }
 
   save(object) {

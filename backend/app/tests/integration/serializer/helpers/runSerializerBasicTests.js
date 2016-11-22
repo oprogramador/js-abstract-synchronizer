@@ -10,6 +10,19 @@ export default (serializerImplementationClass) => {
     return new serializerImplementationClass().configure(newDatabaseName);
   });
 
+  describe('#configure', () => {
+    it('works when called multiple times with the same name', () => {
+      const serializerImplementation = new serializerImplementationClass();
+      const newDatabaseName = 'foo';
+
+      return expect(
+        serializerImplementation.configure(newDatabaseName)
+          .then(() => serializerImplementation.configure(newDatabaseName))
+      )
+        .to.be.fulfilled();
+    });
+  });
+
   describe('#getSerializedStoredData', () => {
     it('returns proper data', () => {
       class Person {

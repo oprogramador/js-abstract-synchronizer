@@ -42,8 +42,6 @@ describe('Serializer', () => {
       });
   });
 
-  it('works with with \'configure\' calling multiple times');
-
   it('saves referenced objects', () => {
     class Person {
       addFriend(person) {
