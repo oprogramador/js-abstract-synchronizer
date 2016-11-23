@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import addMethods from 'js-abstract-synchronizer/objectManipulation/addMethods';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 
 const privates = Symbol('privates');
 const saveWithoutReferences = Symbol('saveWithoutReferences');
