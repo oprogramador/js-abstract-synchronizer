@@ -8,6 +8,116 @@ import runSerializerBasicTests from
 describe('Serializer', () => {
   runSerializerBasicTests(InMemorySerializer);
 
+  describe('#createFromSerializedData', () => {
+    it('uses prototype methods in clone', () => {
+      class Person {
+        addFriend(person) {
+          this.friends.push(person);
+        }
+        getFriends() {
+          return this.friends;
+        }
+        getName() {
+          return this.name;
+        }
+      }
+      const serializer = new Serializer({
+        prototypes: {
+          Array: Array.prototype,
+          Person: Person.prototype,
+        },
+        serializerImplementation: new InMemorySerializer(),
+      });
+      const alicia = serializer.createFromSerializedData({
+        data: {
+          friends: [],
+          name: 'Alicia',
+        },
+        prototypeName: 'Person',
+      });
+      const bob = serializer.createFromSerializedData({
+        data: {
+          friends: [],
+          name: 'Bob',
+        },
+        prototypeName: 'Person',
+      });
+      const chris = serializer.createFromSerializedData({
+        data: {
+          friends: [],
+          name: 'Chris',
+        },
+        prototypeName: 'Person',
+      });
+      alicia.addFriend(bob);
+      alicia.addFriend(chris);
+      let newAlicia;
+
+      return alicia.save()
+        .then(() => {
+          newAlicia = serializer.create({ id: alicia.getId() });
+        })
+        .then(() => newAlicia.reload())
+        .then(() => newAlicia.getFriends().reload())
+        .then(() => newAlicia.getFriends().get(0).reload())
+        .then(() => newAlicia.getFriends().get(1).reload())
+        .then(() => {
+          expect(newAlicia.getFriends().get(0).getName()).to.equal('Bob');
+          expect(newAlicia.getFriends().get(1).getName()).to.equal('Chris');
+        });
+    });
+
+    it('uses provided id when it is provided', () => {
+      class Person {
+      }
+      const serializer = new Serializer({
+        prototypes: {
+          Person: Person.prototype,
+        },
+        serializerImplementation: new InMemorySerializer(),
+      });
+      const alicia = serializer.createFromSerializedData({
+        data: {
+          name: 'Alicia',
+        },
+        id: 'a',
+        prototypeName: 'Person',
+      });
+      const bob = serializer.createFromSerializedData({
+        data: {
+          name: 'Bob',
+        },
+        id: 'b',
+        prototypeName: 'Person',
+      });
+      const chris = serializer.createFromSerializedData({
+        data: {
+          name: 'Chris',
+        },
+        prototypeName: 'Person',
+      });
+      const dave = serializer.createFromSerializedData({
+        data: {
+          name: 'Dave',
+        },
+        prototypeName: 'Person',
+      });
+
+      expect(alicia.getId()).to.equal('a');
+      expect(bob.getId()).to.equal('b');
+      expect(chris.getId()).to.be.a('string');
+      expect(dave.getId()).to.be.a('string');
+
+      return alicia.save()
+        .then(() => {
+          expect(alicia.getId()).to.equal('a');
+          expect(bob.getId()).to.equal('b');
+          expect(chris.getId()).to.be.a('string');
+          expect(dave.getId()).to.be.a('string');
+        });
+    });
+  });
+
   it('uses provided id when it is provided', () => {
     class Person {
       constructor({ id, name }) {

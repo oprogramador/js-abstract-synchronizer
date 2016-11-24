@@ -21,6 +21,10 @@ export default class Serializer {
     };
   }
 
+  createFromSerializedData({ data, id, prototypeName }) {
+    return new this[privates].SerializableObject({ object: Object.assign({ id }, data), prototypeName });
+  }
+
   create(object) {
     if (object instanceof this[privates].SerializableObject) {
       return object;

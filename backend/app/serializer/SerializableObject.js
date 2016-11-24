@@ -6,6 +6,7 @@ const privates = Symbol('privates');
 const saveWithoutReferences = Symbol('saveWithoutReferences');
 const createData = Symbol('createData');
 const getDataToSerialize = Symbol('getDataToSerialize');
+const addMethodsToThis = Symbol('addMethodsToThis');
 
 export default serializer => class SerializableObject {
   constructor({ object, prototypeName }) {
@@ -17,11 +18,18 @@ export default serializer => class SerializableObject {
       storedData: null,
     };
     this[privates].currentData = this[createData](object);
-    addMethods({
-      getTargetInnerObject: () => this[privates].currentData.data,
-      prototype: object.constructor.prototype,
-      target: this,
-    });
+    this[addMethodsToThis](prototypeName);
+  }
+
+  [addMethodsToThis](prototypeName) {
+    const proto = serializer.getPrototype(prototypeName);
+    if (proto) {
+      addMethods({
+        getTargetInnerObject: () => this[privates].currentData.data,
+        prototype: proto,
+        target: this,
+      });
+    }
   }
 
   [createData](object) {
@@ -85,14 +93,7 @@ export default serializer => class SerializableObject {
         );
         this[privates].storedData = _.cloneDeep(newObjectWithReferences);
         this[privates].currentData = _.cloneDeep(newObjectWithReferences);
-        const proto = serializer.getPrototype(filteredObject.prototypeName);
-        if (proto) {
-          addMethods({
-            getTargetInnerObject: () => this[privates].currentData.data,
-            prototype: proto,
-            target: this,
-          });
-        }
+        this[addMethodsToThis](filteredObject.prototypeName);
       });
   }
 
