@@ -26,7 +26,7 @@ export default serializer => class SerializableObject {
 
   [createData](object) {
     return {
-      data: _.cloneDeep(object),
+      data: _.cloneDeep(_.omit(object, 'id')),
       id: this[privates].id,
       prototypeName: this[privates].prototypeName,
     };
