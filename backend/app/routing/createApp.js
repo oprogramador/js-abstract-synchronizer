@@ -14,7 +14,7 @@ export default ({ loggerMiddleware, serializer }) => {
         .catch(() => res.status(HTTPStatus.NOT_FOUND).end());
     })
     .post('/object', (req, res) => {
-      const object = serializer.create(req.body);
+      const object = serializer.createFromSerializedData(req.body);
       object.save()
         .then(() => res.json(JSON.parse(object.getSerializedStoredData())))
         .catch(() => res.status(HTTPStatus.NOT_FOUND).end());

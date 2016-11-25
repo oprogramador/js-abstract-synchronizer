@@ -58,17 +58,18 @@ describe('serializer API', () => {
   });
 
   it('saves and reloads object', () => {
-    const { app } = createTestApp();
-    const object = new Person({ name: 'Bob', surname: 'Boo' });
+    const { app, serializer } = createTestApp();
+    const object = serializer.create(new Person({ name: 'Bob', surname: 'Boo' }));
+    const data = object.getSerializedCurrentData();
 
     return request(app)
       .post('/object')
-      .send(object)
+      .send(JSON.parse(data))
       .then(({ body }) =>
         request(app)
           .get(`/object/${body.id}`)
           .expect(HTTPStatus.OK)
-          .expect(({ body: reloadBody }) => expect(reloadBody.data).to.deep.equal(object))
+          .expect(({ body: reloadBody }) => expect(reloadBody).to.deep.equal(JSON.parse(data)))
       );
   });
 });
