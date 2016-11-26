@@ -1,7 +1,6 @@
 #!/bin/bash
+set -e
 
 path=node_modules/js-abstract-synchronizer
-
-if [ ! -L $path ]; then
-  ln -s ../app $path
-fi
+rm $path
+ln -s ../${APP_DIR:=build} $path

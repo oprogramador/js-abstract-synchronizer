@@ -1,6 +1,6 @@
 {
   "name": "js-abstract-synchronizer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "abstract synchronizer for backend and frontend",
   "license": "MIT",
   "main": "./build/serializer/SerializerFactory.js",
@@ -23,6 +23,7 @@
     "create-project-symlink": "scripts/create-project-symlink.sh",
     "lint": "eslint app",
     "postinstall": "npm run create-project-symlink",
+    "prepublish": "npm run build",
     "start": "scripts/wait_for_db.sh && nodemon -r babel-register app/index.js",
     "test": "mocha -r babel-register --recursive app/tests --timeout 5000"
   },
