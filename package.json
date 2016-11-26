@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "abstract synchronizer for backend and frontend",
   "license": "MIT",
+  "main": "./build/serializer/SerializerFactory.js",
   "keywords": [
     "abstract",
     "synchronize",
@@ -18,7 +19,7 @@
     "url": "git+https://github.com/oprogramador/js-abstract-synchronizer.git"
   },
   "scripts": {
-    "build": "rm -rf build && babel app --out-dir build",
+    "build": "rm -rf build && babel app --out-dir build --ignore tests",
     "create-project-symlink": "scripts/create-project-symlink.sh",
     "lint": "eslint app",
     "postinstall": "npm run create-project-symlink",
