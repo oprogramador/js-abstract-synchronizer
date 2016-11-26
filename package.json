@@ -1,6 +1,6 @@
 {
   "name": "js-abstract-synchronizer",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "abstract synchronizer for backend and frontend",
   "license": "MIT",
   "main": "./build/serializer/SerializerFactory.js",
