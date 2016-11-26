@@ -5,9 +5,9 @@ import request from 'superagent-bluebird-promise';
 const privates = Symbol('privates');
 
 export default class HttpSerializer {
-  constructor() {
+  constructor({ url }) {
     this[privates] = {
-      url: 'http://localhost:3000',
+      url,
     };
   }
 

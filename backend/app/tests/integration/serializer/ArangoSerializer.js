@@ -3,5 +3,5 @@ import runSerializerBasicTests from
   'js-abstract-synchronizer/tests/integration/serializer/helpers/runSerializerBasicTests';
 
 describe('ArangoSerializer', () => {
-  runSerializerBasicTests(ArangoSerializer);
+  runSerializerBasicTests(() => new ArangoSerializer());
 });

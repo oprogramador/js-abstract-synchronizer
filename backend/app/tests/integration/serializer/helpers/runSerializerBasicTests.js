@@ -3,16 +3,16 @@ import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import expect from 'js-abstract-synchronizer/tests/expect';
 import faker from 'faker';
 
-export default (serializerImplementationClass) => {
+export default (createSerializerImplementation) => {
   beforeEach('recreate database', () => {
     const newDatabaseName = `test-${faker.random.uuid()}`;
 
-    return new serializerImplementationClass().configure(newDatabaseName);
+    return createSerializerImplementation().configure(newDatabaseName);
   });
 
   describe('#configure', () => {
     it('works when called multiple times with the same name', () => {
-      const serializerImplementation = new serializerImplementationClass();
+      const serializerImplementation = createSerializerImplementation();
       const newDatabaseName = 'foo';
 
       return expect(
@@ -35,7 +35,7 @@ export default (serializerImplementationClass) => {
         prototypes: {
           Person: Person.prototype,
         },
-        serializerImplementation: new serializerImplementationClass(),
+        serializerImplementation: createSerializerImplementation(),
       });
       const object = new Person();
       const serializableObject = serializer.create(object);
@@ -70,7 +70,7 @@ export default (serializerImplementationClass) => {
         prototypes: {
           Person: Person.prototype,
         },
-        serializerImplementation: new serializerImplementationClass(),
+        serializerImplementation: createSerializerImplementation(),
       });
       const object = new Person();
       const serializableObject = serializer.create(object);
@@ -97,7 +97,7 @@ export default (serializerImplementationClass) => {
     it('rejects when object is not found', () => {
       const serializer = new Serializer({
         prototypes: {},
-        serializerImplementation: new serializerImplementationClass(),
+        serializerImplementation: createSerializerImplementation(),
       });
 
       const serializableObject = serializer.create({ id: 'non-existent' });
@@ -123,7 +123,7 @@ export default (serializerImplementationClass) => {
       prototypes: {
         Person: Person.prototype,
       },
-      serializerImplementation: new serializerImplementationClass(),
+      serializerImplementation: createSerializerImplementation(),
     });
     const object = new Person();
     const serializableObject = serializer.create(object);
@@ -158,7 +158,7 @@ export default (serializerImplementationClass) => {
       prototypes: {
         Person: Person.prototype,
       },
-      serializerImplementation: new serializerImplementationClass(),
+      serializerImplementation: createSerializerImplementation(),
     });
     const object = new Person();
 

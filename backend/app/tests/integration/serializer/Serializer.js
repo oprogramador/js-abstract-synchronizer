@@ -8,7 +8,7 @@ import runSerializerBasicTests from
 import sinon from 'sinon';
 
 describe('Serializer', () => {
-  runSerializerBasicTests(InMemorySerializer);
+  runSerializerBasicTests(() => new InMemorySerializer());
 
   describe('#createFromSerializedData', () => {
     it('uses prototype methods in clone', () => {
