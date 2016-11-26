@@ -1,6 +1,5 @@
 import NotFoundError from 'js-abstract-synchronizer/errors/NotFoundError';
 import arangoErrorCodes from 'arangodb-error-codes';
-import { db } from 'js-abstract-synchronizer/servicesManager';
 
 const privates = Symbol('privates');
 const handleDuplicateName = error => (
@@ -10,13 +9,15 @@ const handleDuplicateName = error => (
 );
 
 export default class ArangoSerializer {
-  constructor() {
+  constructor({ db }) {
     this[privates] = {
       collection: db.collection('all'),
+      db,
     };
   }
 
   configure(dbName) {
+    const db = this[privates].db;
     db.useDatabase('_system');
 
     return db.createDatabase(dbName)
