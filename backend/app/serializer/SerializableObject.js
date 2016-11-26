@@ -19,6 +19,9 @@ export default serializer => class SerializableObject {
     };
     this[privates].currentData = this[createData](object);
     this[addMethodsToThis](prototypeName);
+    if (this.validate) {
+      this.validate(object);
+    }
   }
 
   [addMethodsToThis](prototypeName) {

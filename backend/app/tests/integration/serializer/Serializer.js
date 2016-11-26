@@ -1,9 +1,11 @@
+import ExtendableError from 'es6-error';
 import InMemorySerializer from
   'js-abstract-synchronizer/tests/integration/serializer/helpers/InMemorySerializer';
 import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import expect from 'js-abstract-synchronizer/tests/expect';
 import runSerializerBasicTests from
   'js-abstract-synchronizer/tests/integration/serializer/helpers/runSerializerBasicTests';
+import sinon from 'sinon';
 
 describe('Serializer', () => {
   runSerializerBasicTests(InMemorySerializer);
@@ -65,6 +67,89 @@ describe('Serializer', () => {
           expect(newAlicia.getFriends().get(0).getName()).to.equal('Bob');
           expect(newAlicia.getFriends().get(1).getName()).to.equal('Chris');
         });
+    });
+
+    describe('validation', () => {
+      it('runs `validate` method when it is provided', () => {
+        const innerValidate = sinon.stub();
+        class Person {
+          getName() {
+            return this.name;
+          }
+          validate(data) {
+            innerValidate(data);
+          }
+        }
+        const serializer = new Serializer({
+          prototypes: {
+            Person: Person.prototype,
+          },
+          serializerImplementation: new InMemorySerializer(),
+        });
+        const data = {
+          data: {
+            friends: [],
+            id: 'foo',
+            name: 'Alicia',
+          },
+          prototypeName: 'Person',
+        };
+        serializer.createFromSerializedData(data);
+        expect(innerValidate.withArgs(data.data)).to.be.calledOnce();
+      });
+
+      it('throws the same error when validation fails', () => {
+        class CustomError extends ExtendableError {
+        }
+        class Person {
+          getName() {
+            return this.name;
+          }
+          validate() {
+            throw new CustomError();
+          }
+        }
+        const serializer = new Serializer({
+          prototypes: {
+            Person: Person.prototype,
+          },
+          serializerImplementation: new InMemorySerializer(),
+        });
+        const data = {
+          data: {
+            friends: [],
+            id: 'foo',
+            name: 'Alicia',
+          },
+          prototypeName: 'Person',
+        };
+        expect(() => serializer.createFromSerializedData(data)).to.throw(CustomError);
+      });
+
+      it('does not throw error when validation succeeds', () => {
+        class Person {
+          getName() {
+            return this.name;
+          }
+          validate() {
+          }
+        }
+        const serializer = new Serializer({
+          prototypes: {
+            Person: Person.prototype,
+          },
+          serializerImplementation: new InMemorySerializer(),
+        });
+        const data = {
+          data: {
+            friends: [],
+            id: 'foo',
+            name: 'Alicia',
+          },
+          prototypeName: 'Person',
+        };
+        expect(() => serializer.createFromSerializedData(data)).to.not.throw(Error);
+      });
     });
 
     it('uses provided id when it is provided', () => {
