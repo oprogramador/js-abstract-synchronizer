@@ -21,6 +21,10 @@ export default class Serializer {
     };
   }
 
+  configure(dbName) {
+    return this[privates].serializerImplementation.configure(dbName);
+  }
+
   createFromSerializedData({ data, id, prototypeName }) {
     return new this[privates].SerializableObject({ object: Object.assign({ id }, data), prototypeName });
   }

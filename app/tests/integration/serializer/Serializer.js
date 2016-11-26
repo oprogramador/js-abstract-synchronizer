@@ -10,6 +10,26 @@ import sinon from 'sinon';
 describe('Serializer', () => {
   runSerializerBasicTests(() => new InMemorySerializer());
 
+  describe('#configure', () => {
+    it('calls serializerImplementation#configure with parameter', () => {
+      class Person {
+      }
+      const customSerializer = {
+        configure: sinon.stub(),
+      };
+      const serializer = new Serializer({
+        prototypes: {
+          Person: Person.prototype,
+        },
+        serializerImplementation: customSerializer,
+      });
+      const dbName = 'foo-bar';
+      serializer.configure(dbName);
+
+      expect(customSerializer.configure.withArgs(dbName)).to.be.calledOnce();
+    });
+  });
+
   describe('#createFromSerializedData', () => {
     it('uses prototype methods in clone', () => {
       class Person {
