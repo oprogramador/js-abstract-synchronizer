@@ -2,7 +2,7 @@ version: '2'
 
 services:
   db:
-    build: arangodb
+    image: arangodb/arangodb
     ports:
       - 8529:8529
     command: arangod
