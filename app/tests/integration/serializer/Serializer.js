@@ -1,6 +1,7 @@
 import ExtendableError from 'es6-error';
 import InMemorySerializer from
   'js-abstract-synchronizer/tests/integration/serializer/helpers/InMemorySerializer';
+import InvalidIdError from 'js-abstract-synchronizer/errors/InvalidIdError';
 import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import expect from 'js-abstract-synchronizer/tests/expect';
 import runSerializerBasicTests from
@@ -9,6 +10,38 @@ import sinon from 'sinon';
 
 describe('Serializer', () => {
   runSerializerBasicTests(() => new InMemorySerializer());
+
+  it('throws InvalidIdError when provided id is not a string', () => {
+    class Person {
+      constructor() {
+        this.id = 123;
+        this.name = 'Alicia';
+      }
+    }
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+    expect(() => serializer.create(new Person())).to.throw(InvalidIdError, 'id must be a string');
+  });
+
+  it('throws InvalidIdError when provided id is an empty string', () => {
+    class Person {
+      constructor() {
+        this.id = '';
+        this.name = 'Alicia';
+      }
+    }
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+    expect(() => serializer.create(new Person())).to.throw(InvalidIdError, 'id cannot be empty');
+  });
 
   describe('#configure', () => {
     it('calls serializerImplementation#configure with parameter', () => {

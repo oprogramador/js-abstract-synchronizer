@@ -1,3 +1,4 @@
+import InvalidIdError from 'js-abstract-synchronizer/errors/InvalidIdError';
 import _ from 'lodash';
 import addMethods from 'js-abstract-synchronizer/objectManipulation/addMethods';
 import uuid from 'uuid';
@@ -7,10 +8,12 @@ const saveWithoutReferences = Symbol('saveWithoutReferences');
 const createData = Symbol('createData');
 const getDataToSerialize = Symbol('getDataToSerialize');
 const addMethodsToThis = Symbol('addMethodsToThis');
+const validateId = Symbol('validateId');
 
 export default serializer => class SerializableObject {
   constructor({ object, prototypeName }) {
-    const id = object.id || uuid.v4();
+    const id = _.isUndefined(object.id) ? uuid.v4() : object.id;
+    this[validateId](id);
     this[privates] = {
       id,
       isBeingSaved: false,
@@ -21,6 +24,15 @@ export default serializer => class SerializableObject {
     this[addMethodsToThis](prototypeName);
     if (this.validate) {
       this.validate(object);
+    }
+  }
+
+  [validateId](id) {
+    if (typeof id !== 'string') {
+      throw new InvalidIdError('id must be a string');
+    }
+    if (id === '') {
+      throw new InvalidIdError('id cannot be empty');
     }
   }
 
