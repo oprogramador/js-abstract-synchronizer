@@ -63,6 +63,80 @@ describe('Serializer', () => {
     });
   });
 
+  describe('#create', () => {
+    describe('validation', () => {
+      it('runs `validate` method when it is provided', () => {
+        const innerValidate = sinon.stub();
+        class Person {
+          constructor({ name }) {
+            this.name = name;
+          }
+          getName() {
+            return this.name;
+          }
+          validate(data) {
+            innerValidate(data);
+          }
+        }
+        const serializer = new Serializer({
+          prototypes: {
+            Person: Person.prototype,
+          },
+          serializerImplementation: new InMemorySerializer(),
+        });
+        const data = { name: 'Alicia' };
+        const object = new Person(data);
+        serializer.create(object);
+        expect(innerValidate.withArgs(data)).to.be.calledOnce();
+      });
+
+      it('throws the same error when validation fails', () => {
+        class CustomError extends ExtendableError {
+        }
+        class Person {
+          constructor({ name }) {
+            this.name = name;
+          }
+          getName() {
+            return this.name;
+          }
+          validate() {
+            throw new CustomError();
+          }
+        }
+        const serializer = new Serializer({
+          prototypes: {
+            Person: Person.prototype,
+          },
+          serializerImplementation: new InMemorySerializer(),
+        });
+        const object = new Person({ name: 'Alicia' });
+        expect(() => serializer.create(object)).to.throw(CustomError);
+      });
+
+      it('does not throw error when validation succeeds', () => {
+        class Person {
+          constructor({ name }) {
+            this.name = name;
+          }
+          getName() {
+            return this.name;
+          }
+          validate() {
+          }
+        }
+        const serializer = new Serializer({
+          prototypes: {
+            Person: Person.prototype,
+          },
+          serializerImplementation: new InMemorySerializer(),
+        });
+        const object = new Person({ name: 'Alicia' });
+        expect(() => serializer.createFromSerializedData(object)).to.not.throw(Error);
+      });
+    });
+  });
+
   describe('#createFromSerializedData', () => {
     it('uses prototype methods in clone', () => {
       class Person {
