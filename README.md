@@ -1,5 +1,7 @@
 # js-abstract-synchronizer
 
+[![Build Status](https://travis-ci.org/oprogramador/js-abstract-synchronizer.svg?branch=master)](https://travis-ci.org/oprogramador/js-abstract-synchronizer)
+
 This library works on:
 
 * backend like ODM or ORM
