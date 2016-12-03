@@ -1,6 +1,6 @@
 {
   "name": "js-abstract-synchronizer",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "abstract synchronizer for backend and frontend",
   "license": "MIT",
   "main": "./build/serializer/index.js",
@@ -25,8 +25,9 @@
     "postinstall": "npm run create-project-symlink",
     "prepublish": "npm run build",
     "start": "scripts/wait_for_db.sh && npm test",
+    "self-install": "scripts/self_install.sh",
     "test-mocha": "mocha -r babel-register --recursive app/tests --timeout 5000",
-    "test": "npm run lint && npm run test-mocha"
+    "test": "npm run self-install && npm run lint && npm run test-mocha"
   },
   "dependencies": {
     "arangodb-error-codes": "^1.0.3",
