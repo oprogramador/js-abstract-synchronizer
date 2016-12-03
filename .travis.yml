@@ -1,0 +1,8 @@
+sudo: required
+script:
+  - DB_PASSWORD=password docker-compose up backend
+  - exit $(docker inspect -f '{{ .State.ExitCode }}' `docker-compose ps -q backend`)
+notifications:
+  email:
+    on_success: never
+    on_failure: always

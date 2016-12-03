@@ -9,7 +9,7 @@ do
   sleep 1
 done
 
-for i in `seq 30`
+for i in `seq 5`
 do
   echo waiting for database
   sleep 1
