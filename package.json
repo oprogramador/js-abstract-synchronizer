@@ -23,7 +23,7 @@
     "create-project-symlink": "scripts/create-project-symlink.sh",
     "lint": "eslint app",
     "postinstall": "npm run create-project-symlink",
-    "prepublish": "npm test && npm run build",
+    "prepublish": "npm run build",
     "start": "scripts/wait_for_db.sh && npm test",
     "self-install": "scripts/self_install.sh",
     "test-mocha": "mocha -r babel-register --recursive app/tests --timeout 5000",
