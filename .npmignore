@@ -1,8 +1,5 @@
+/*
+!/build
+
 *.log
 *.swo
-.babelrc
-.eslintrc
-app
-docker-compose.yml
-Dockerfile
-entrypoint.sh
