@@ -15,7 +15,7 @@ This library works on:
 
 ```javascript
 import arangojs from 'arangojs';
-import SerializerFactory from 'js-abstract-synchronizer';
+import { SerializerFactory } from 'js-abstract-synchronizer';
 
 const db = arangojs({ url: 'http//user:password@localhost:8529' });
 
