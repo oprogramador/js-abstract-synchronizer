@@ -107,7 +107,6 @@ export default serializer => class SerializableObject {
           }
         );
         this[privates].storedData = _.cloneDeep(newObjectWithReferences);
-        this[privates].currentData = _.cloneDeep(newObjectWithReferences);
         this[addMethodsToThis](filteredObject.prototypeName);
       });
   }
