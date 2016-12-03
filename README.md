@@ -1,5 +1,6 @@
 # js-abstract-synchronizer
 
+[![MIT License](https://img.shields.io/badge/license-mit-green.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/oprogramador/js-abstract-synchronizer.svg?branch=master)](https://travis-ci.org/oprogramador/js-abstract-synchronizer)
 
 [![NPM status](https://nodei.co/npm/js-abstract-synchronizer.png?downloads=true&stars=true)](https://npmjs.org/package/js-abstract-synchronizer)
