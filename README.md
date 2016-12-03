@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/oprogramador/js-abstract-synchronizer.svg?branch=master)](https://travis-ci.org/oprogramador/js-abstract-synchronizer)
 
+[![NPM status](https://nodei.co/npm/js-abstract-synchronizer.png?downloads=true&stars=true)](https://npmjs.org/package/js-abstract-synchronizer)
+
 This library works on:
 
 * backend like ODM or ORM
