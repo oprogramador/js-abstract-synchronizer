@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-dir_name=self_install_$RAND_$RAND_$RAND
+dir_name=self_install_${RANDOM}_${RANDOM}_${RANDOM}
 mkdir $dir_name
 cd $dir_name
 echo '{}' > package.json
