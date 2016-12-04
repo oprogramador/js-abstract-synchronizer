@@ -17,7 +17,6 @@ describe('HttpSerializer', () => {
       serializerImplementation,
     });
     const app = createApp({
-      loggerMiddleware: (req, res, next) => next(),
       serializer,
     });
     listener = app.listen(port);

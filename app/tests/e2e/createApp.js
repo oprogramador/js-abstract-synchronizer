@@ -5,6 +5,7 @@ import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
 import createApp from 'js-abstract-synchronizer/routing/createApp';
 import expect from 'js-abstract-synchronizer/tests/expect';
 import request from 'supertest-as-promised';
+import sinon from 'sinon';
 
 class Person {
   constructor({ name, surname }) {
@@ -34,10 +35,7 @@ const createTestApp = () => {
   });
 
   return {
-    app: createApp({
-      loggerMiddleware: (req, res, next) => next(),
-      serializer,
-    }),
+    app: createApp({ serializer }),
     serializer,
   };
 };
@@ -71,5 +69,41 @@ describe('serializer API', () => {
           .expect(HTTPStatus.OK)
           .expect(({ body: reloadBody }) => expect(reloadBody).to.deep.equal(JSON.parse(data)))
       );
+  });
+
+  it('runs middlewares', () => {
+    const serializer = new Serializer({
+      prototypes: {
+        Person: Person.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+
+    const firstCallback = sinon.stub();
+    const secondCallback = sinon.stub();
+
+    const app = createApp({
+      middlewares: [
+        (req, res, next) => {
+          firstCallback();
+          next();
+        },
+        (req, res, next) => {
+          secondCallback();
+          next();
+        },
+      ],
+      serializer,
+    });
+
+    expect(firstCallback).to.not.be.called();
+    expect(secondCallback).to.not.be.called();
+
+    return request(app)
+      .post('/object')
+      .then(() => {
+        expect(firstCallback).to.be.called();
+        expect(secondCallback).to.be.called();
+      });
   });
 });

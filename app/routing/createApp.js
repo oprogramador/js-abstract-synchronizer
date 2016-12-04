@@ -2,10 +2,12 @@ import HTTPStatus from 'http-status';
 import bodyParser from 'body-parser';
 import express from 'express';
 
-export default ({ loggerMiddleware, serializer }) => {
+export default ({ middlewares = [], serializer }) => {
   const app = express();
 
-  app.use(loggerMiddleware)
+  middlewares.forEach(middleware => app.use(middleware));
+
+  app
     .use(bodyParser.json())
     .get('/object/:id', (req, res) => {
       const object = serializer.create({ id: req.params.id });
