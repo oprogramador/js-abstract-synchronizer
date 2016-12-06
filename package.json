@@ -1,6 +1,6 @@
 {
   "name": "js-abstract-synchronizer",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "abstract synchronizer for backend and frontend",
   "license": "MIT",
   "main": "./build/index.js",
@@ -41,8 +41,9 @@
     "json-schema-filter": "^0.1.5",
     "jsonschema": "^1.1.0",
     "lodash": "^4.16.6",
-    "uuid": "^3.0.0",
-    "superagent-bluebird-promise": "^4.1.0"
+    "superagent": "^3.1.0",
+    "superagent-bluebird-promise": "^4.1.0",
+    "uuid": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
