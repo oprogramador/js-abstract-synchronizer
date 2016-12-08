@@ -1,6 +1,6 @@
 {
   "name": "js-abstract-synchronizer",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "abstract synchronizer for backend and frontend",
   "license": "MIT",
   "main": "./build/index.js",
