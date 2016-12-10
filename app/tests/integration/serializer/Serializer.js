@@ -3,6 +3,7 @@ import InMemorySerializer from
   'js-abstract-synchronizer/tests/integration/serializer/helpers/InMemorySerializer';
 import InvalidIdError from 'js-abstract-synchronizer/errors/InvalidIdError';
 import Serializer from 'js-abstract-synchronizer/serializer/Serializer';
+import _ from 'lodash';
 import expect from 'js-abstract-synchronizer/tests/expect';
 import runSerializerBasicTests from
   'js-abstract-synchronizer/tests/integration/serializer/helpers/runSerializerBasicTests';
@@ -477,6 +478,202 @@ describe('Serializer', () => {
       .then(() => {
         expect(newAlicia.getFriends().get(0).getName()).to.equal('Bob');
         expect(newAlicia.getFriends().get(1).getName()).to.equal('Chris');
+      });
+  });
+
+  it('deals with circular references - getSerializedCurrentData', () => {
+    class Message {
+      constructor({ room, sender, text }) {
+        this.room = room;
+        this.sender = sender;
+        this.text = text;
+        this.createdAt = Date.now();
+
+        room.addMessage(this);
+      }
+      getText() {
+        return this.text;
+      }
+      getSender() {
+        return this.sender;
+      }
+      getCreatedAt() {
+        return this.createdAt;
+      }
+      getRoom() {
+        return this.room;
+      }
+    }
+
+    class Room {
+      constructor({ name }) {
+        this.name = name;
+        this.users = [];
+        this.messages = [];
+      }
+      getName() {
+        return this.name;
+      }
+      addUser(user) {
+        this.users.push(user);
+      }
+      addMessage(message) {
+        this.messages.push(message);
+      }
+      getUsers() {
+        return _.clone(this.users);
+      }
+      getMessages() {
+        return _.clone(this.messages);
+      }
+    }
+
+    class User {
+      constructor({ username }) {
+        this.username = username;
+      }
+      getUsername() {
+        return this.username;
+      }
+    }
+
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Message: Message.prototype,
+        Room: Room.prototype,
+        User: User.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+
+    const user = serializer.create(new User({ username: 'Alicia' }));
+    const room = serializer.create(new Room({ name: 'general' }));
+    const message = serializer.create(new Message({
+      room,
+      sender: user,
+      text: 'lorem ipsum',
+    }));
+
+    const messageData = JSON.parse(message.getSerializedCurrentData());
+    expect(messageData).to.have.containSubset({
+      data: {
+        createdAt: message.getCreatedAt(),
+        text: 'lorem ipsum',
+      },
+      id: message.getId(),
+      prototypeName: 'Message',
+    });
+
+    const roomData = JSON.parse(room.getSerializedCurrentData());
+    expect(roomData).to.have.to.containSubset({
+      data: {
+        name: 'general',
+      },
+      id: room.getId(),
+      prototypeName: 'Room',
+    });
+
+    const userData = JSON.parse(user.getSerializedCurrentData());
+    expect(userData).to.have.to.containSubset({
+      data: {
+        username: 'Alicia',
+      },
+      id: user.getId(),
+      prototypeName: 'User',
+    });
+  });
+
+  it.skip('deals with circular references - multiple classes', () => {
+    class Message {
+      constructor({ room, sender, text }) {
+        this.room = room;
+        this.sender = sender;
+        this.text = text;
+        this.createdAt = Date.now();
+
+        room.addMessage(this);
+      }
+      getText() {
+        return this.text;
+      }
+      getSender() {
+        return this.sender;
+      }
+      getCreatedAt() {
+        return this.createdAt;
+      }
+      getRoom() {
+        return this.room;
+      }
+    }
+
+    class Room {
+      constructor({ name }) {
+        this.name = name;
+        this.users = [];
+        this.messages = [];
+      }
+      getName() {
+        return this.name;
+      }
+      addUser(user) {
+        this.users.push(user);
+      }
+      addMessage(message) {
+        this.messages.push(message);
+      }
+      getUsers() {
+        return this.users;
+      }
+      getMessages() {
+        return this.messages;
+      }
+    }
+
+    class User {
+      constructor({ username }) {
+        this.username = username;
+      }
+      getUsername() {
+        return this.username;
+      }
+    }
+
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Message: Message.prototype,
+        Room: Room.prototype,
+        User: User.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+
+    const user = serializer.create(new User({ username: 'Alicia' }));
+    const room = serializer.create(new Room({ name: 'general' }));
+    const message = serializer.create(new Message({
+      room,
+      sender: user,
+      text: 'lorem ipsum',
+    }));
+
+    const newUser = serializer.create({ id: user.getId() });
+    const newRoom = serializer.create({ id: room.getId() });
+
+    return message.save()
+      .then(() => newUser.reload())
+      .then(() => {
+        expect(newUser.getUsername()).to.equal('Alicia');
+      })
+      .then(() => newRoom.reload())
+      .then(() => {
+        expect(newRoom.getName()).to.equal('general');
+      })
+      .then(() => newRoom.getMessages().reload())
+      .then(() => newRoom.getMessages().get(0).reload())
+      .then(() => {
+        expect(newRoom.getMessages().get(0).getId()).to.equal(message.getId());
       });
   });
 
