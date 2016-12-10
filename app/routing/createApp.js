@@ -1,5 +1,6 @@
 import HTTPStatus from 'http-status';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import express from 'express';
 
 export default ({ middlewares = [], serializer }) => {
@@ -8,6 +9,7 @@ export default ({ middlewares = [], serializer }) => {
   middlewares.forEach(middleware => app.use(middleware));
 
   app
+    .use(cors())
     .use(bodyParser.json())
     .get('/object/:id', (req, res) => {
       const object = serializer.create({ id: req.params.id });
