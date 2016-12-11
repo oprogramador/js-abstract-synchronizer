@@ -1,0 +1,4 @@
+todo:
+  - repository beside active record
+  - allow constructors to be passed beside prototypes in serializer config
+  - default prototypes in serializer config like Array
