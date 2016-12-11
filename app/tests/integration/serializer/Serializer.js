@@ -381,6 +381,7 @@ describe('Serializer', () => {
     }
     const serializer = new Serializer({
       prototypes: {
+        Array: Array.prototype,
         Person: Person.prototype,
       },
       serializerImplementation: new InMemorySerializer(),
@@ -398,6 +399,58 @@ describe('Serializer', () => {
       .then(() => expect(dave.getName()).to.equal('Dave234'))
       .then(() => dave.reload())
       .then(() => expect(dave.getName()).to.equal('Dave'));
+  });
+
+  it('saves references to referenced objects', () => {
+    class Person {
+      addFriend(person) {
+        this.friends.push(person);
+      }
+      constructor(name) {
+        this.name = name;
+        this.friends = [];
+      }
+      getName() {
+        return this.name;
+      }
+      setName(name) {
+        this.name = name;
+      }
+      getFriends() {
+        return this.friends;
+      }
+    }
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Person: Person.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+    const alicia = serializer.create(new Person('Alicia'));
+    const bob = serializer.create(new Person('Bob'));
+    const chris = serializer.create(new Person('Chris'));
+    const dave = serializer.create(new Person('Dave'));
+    alicia.addFriend(bob);
+    alicia.addFriend(chris);
+    chris.addFriend(dave);
+
+    let friendsId;
+
+    return alicia.save()
+      .then(() => {
+        const data = JSON.parse(alicia.getSerializedStoredData());
+        friendsId = data.data.friends.id;
+      })
+      .then(() => alicia.getFriends().reload())
+      .then(() => expect(alicia.getFriends().getId()).to.equal(friendsId))
+      .then(() => bob.reload())
+      .then(() => chris.reload())
+      .then(() => {
+        const data = JSON.parse(alicia.getFriends().getSerializedCurrentData());
+        expect(data.data[0].id).to.equal(bob.getId());
+        expect(data.data[1].id).to.equal(chris.getId());
+      });
   });
 
   it('makes correct references', () => {

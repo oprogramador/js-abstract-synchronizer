@@ -9,6 +9,7 @@ const createData = Symbol('createData');
 const getDataToSerialize = Symbol('getDataToSerialize');
 const addMethodsToThis = Symbol('addMethodsToThis');
 const validateId = Symbol('validateId');
+const createSerializedData = Symbol('createSerializedData');
 
 export default serializer => class SerializableObject {
   constructor({ object, prototypeName }) {
@@ -132,11 +133,21 @@ export default serializer => class SerializableObject {
     return this[privates].id;
   }
 
+  [createSerializedData](data) {
+    if (!data || !data.data) {
+      return data;
+    }
+
+    return Object.assign({}, data, {
+      data: _.mapValues(data.data, value => (value instanceof SerializableObject ? { id: value.getId() } : value)),
+    });
+  }
+
   getSerializedStoredData() {
-    return JSON.stringify(this[privates].storedData);
+    return JSON.stringify(this[createSerializedData](this[privates].storedData));
   }
 
   getSerializedCurrentData() {
-    return JSON.stringify(this[privates].currentData);
+    return JSON.stringify(this[createSerializedData](this[privates].currentData));
   }
 };
