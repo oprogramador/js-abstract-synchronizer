@@ -65,16 +65,7 @@ export default serializer => class SerializableObject {
   }
 
   [getDataToSerialize]() {
-    const transform = value => (typeof value === 'object' ? { id: value.getId() } : value);
-    const data = Array.isArray(this[privates].currentData.data)
-      ? this[privates].currentData.data.map(transform)
-      : _.mapValues(this[privates].currentData.data, transform);
-
-    return {
-      data,
-      id: this[privates].id,
-      prototypeName: this[privates].prototypeName,
-    };
+    return this[createSerializedData](this[privates].currentData);
   }
 
   save() {
