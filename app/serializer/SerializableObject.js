@@ -57,7 +57,15 @@ export default serializer => class SerializableObject {
   }
 
   [saveWithoutReferences]() {
-    return serializer.save(this[getDataToSerialize]())
+    const data = this[getDataToSerialize]();
+
+    return (
+      _.isUndefined(data.prototypeName)
+        ? this.reload()
+            .then(() => this[getDataToSerialize]())
+        : Promise.resolve(data)
+    )
+      .then(dataToSave => serializer.save(dataToSave))
       .then(() => {
         this[privates].storedData = this[createData](this[privates].currentData.data);
         this[privates].isBeingSaved = false;
