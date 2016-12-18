@@ -746,6 +746,27 @@ describe('Serializer', () => {
       });
   });
 
+  it('does not reload object being saved when it has not been created yet', () => {
+    class Person {
+      constructor(name) {
+        this.name = name;
+      }
+    }
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Person: Person.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+    const alicia = serializer.create(new Person('Alicia'));
+    const newAlicia = serializer.create({ id: alicia.getId() });
+
+    return newAlicia.save()
+      .then(() => alicia.reload())
+      .then(() => expect(alicia.getId()).to.equal(newAlicia.getId()));
+  });
+
   it('does not override children with partial objects', () => {
     class Person {
       addFriend(person) {

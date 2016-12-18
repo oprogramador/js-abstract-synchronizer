@@ -1,4 +1,5 @@
 import InvalidIdError from 'js-abstract-synchronizer/errors/InvalidIdError';
+import NotFoundError from 'js-abstract-synchronizer/errors/NotFoundError';
 import _ from 'lodash';
 import addMethods from 'js-abstract-synchronizer/objectManipulation/addMethods';
 import uuid from 'uuid';
@@ -65,6 +66,7 @@ export default serializer => class SerializableObject {
             .then(() => this[getDataToSerialize]())
         : Promise.resolve(data)
     )
+      .catch(error => (error instanceof NotFoundError ? data : Promise.reject(error)))
       .then(dataToSave => serializer.save(dataToSave))
       .then(() => {
         this[privates].storedData = this[createData](this[privates].currentData.data);
