@@ -4,7 +4,7 @@ services:
   db:
     image: arangodb/arangodb
     ports:
-      - 8529:8529
+      - ${DB_EXTERNAL_PORT}:8529
     command: arangod
     environment:
       ARANGO_ROOT_PASSWORD: ${DB_PASSWORD}
