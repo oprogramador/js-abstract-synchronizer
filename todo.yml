@@ -2,3 +2,6 @@ todo:
   - repository beside active record
   - allow constructors to be passed beside prototypes in serializer config
   - default prototypes in serializer config like Array
+  - recurursive save/reload with limited depth
+  - collection of objects in memory
+  - detail docs

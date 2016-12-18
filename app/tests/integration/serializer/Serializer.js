@@ -379,7 +379,7 @@ describe('Serializer', () => {
       });
   });
 
-  it('saves referenced objects', () => {
+  it('saves referenced objects for the first time', () => {
     class Person {
       addFriend(person) {
         this.friends.push(person);
@@ -625,7 +625,7 @@ describe('Serializer', () => {
     }));
 
     const messageData = JSON.parse(message.getSerializedCurrentData());
-    expect(messageData).to.have.containSubset({
+    expect(messageData).to.containSubset({
       data: {
         createdAt: message.getCreatedAt(),
         text: 'lorem ipsum',
@@ -635,7 +635,7 @@ describe('Serializer', () => {
     });
 
     const roomData = JSON.parse(room.getSerializedCurrentData());
-    expect(roomData).to.have.to.containSubset({
+    expect(roomData).to.containSubset({
       data: {
         name: 'general',
       },
@@ -644,7 +644,7 @@ describe('Serializer', () => {
     });
 
     const userData = JSON.parse(user.getSerializedCurrentData());
-    expect(userData).to.have.to.containSubset({
+    expect(userData).to.containSubset({
       data: {
         username: 'Alicia',
       },
