@@ -88,6 +88,18 @@ describe('addMethods', () => {
     expect(list.get(2)).to.equal('baz');
   });
 
+  it('adds \'size\' method for Array', () => {
+    const innerObject = ['foo', 'bar', 'baz'];
+    const list = {
+      innerObject: _.cloneDeep(innerObject),
+    };
+
+    addMethods({ getTargetInnerObject: () => list.innerObject, prototype: innerObject, target: list });
+
+    const expectedSize = 3;
+    expect(list.size()).to.equal(expectedSize);
+  });
+
   it('adds no extra properties', () => {
     const innerObject = {
       age: 0,

@@ -8,6 +8,10 @@ const addArrayMethods = ({ getTargetInnerObject, target }) => {
   target.set = function set(index, value) {
     getTargetInnerObject()[index] = value;
   };
+
+  target.size = function size() {
+    return getTargetInnerObject().length;
+  };
 };
 
 export default ({ getTargetInnerObject, prototype, target }) => {
