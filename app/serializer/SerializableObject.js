@@ -5,7 +5,6 @@ import addMethods from 'js-abstract-synchronizer/objectManipulation/addMethods';
 import uuid from 'uuid';
 
 const privates = Symbol('privates');
-const saveWithoutReferences = Symbol('saveWithoutReferences');
 const createData = Symbol('createData');
 const getDataToSerialize = Symbol('getDataToSerialize');
 const addMethodsToThis = Symbol('addMethodsToThis');
@@ -57,7 +56,7 @@ export default serializer => class SerializableObject {
     };
   }
 
-  [saveWithoutReferences]() {
+  saveWithoutReferences() {
     const data = this[getDataToSerialize]();
 
     return (
@@ -89,7 +88,7 @@ export default serializer => class SerializableObject {
       }
     });
 
-    return Promise.all([this[saveWithoutReferences](), ...objectsToSave.map(object => object.save())]);
+    return Promise.all([this.saveWithoutReferences(), ...objectsToSave.map(object => object.save())]);
   }
 
   reload() {

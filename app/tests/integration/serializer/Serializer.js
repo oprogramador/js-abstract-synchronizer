@@ -379,6 +379,40 @@ describe('Serializer', () => {
       });
   });
 
+  it('saves single object', () => {
+    class Person {
+      addFriend(person) {
+        this.friends.push(person);
+      }
+      constructor(name) {
+        this.name = name;
+        this.friends = [];
+      }
+      getName() {
+        return this.name;
+      }
+      setName(name) {
+        this.name = name;
+      }
+    }
+    const serializer = new Serializer({
+      prototypes: {
+        Array: Array.prototype,
+        Person: Person.prototype,
+      },
+      serializerImplementation: new InMemorySerializer(),
+    });
+    const alicia = serializer.create(new Person('Alicia'));
+    const newAlicia = serializer.create({ id: alicia.getId() });
+    const bob = serializer.create(new Person('Bob'));
+    alicia.addFriend(bob);
+
+    return alicia.saveWithoutReferences()
+      .then(() => newAlicia.reload())
+      .then(() => expect(newAlicia.getName()).to.equal('Alicia'))
+      .then(() => expect(bob.isDirty()).to.be.true());
+  });
+
   it('saves referenced objects for the first time', () => {
     class Person {
       addFriend(person) {
