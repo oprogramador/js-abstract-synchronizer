@@ -22,5 +22,5 @@ services:
       DB_USER: root
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: localhost
-      DB_PORT: 8529
+      DB_PORT: ${DB_EXTERNAL_PORT}
       TERM: xterm-256color
