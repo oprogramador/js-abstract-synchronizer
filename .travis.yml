@@ -5,6 +5,12 @@ services:
 script:
   - DB_PASSWORD=password docker-compose up backend
   - exit $(docker inspect -f '{{ .State.ExitCode }}' `docker-compose ps -q backend`)
+deploy:
+  provider: npm
+  api_key: $NPM_TOKEN
+  email: $NPM_EMAIL
+  on:
+    branch: master
 notifications:
   email:
     on_success: never

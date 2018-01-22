@@ -1,6 +1,6 @@
 {
   "name": "js-abstract-synchronizer",
-  "version": "2.3.1",
+  "version": "2.3.3",
   "description": "abstract synchronizer for backend and frontend",
   "license": "MIT",
   "main": "./build/index.js",
@@ -19,11 +19,11 @@
     "url": "git+https://github.com/oprogramador/js-abstract-synchronizer.git"
   },
   "scripts": {
-    "build": "rm -rf build && babel app --out-dir build --ignore tests",
+    "build": "rm -rf build && babel app --out-dir build --ignore tests/",
     "create-project-symlink": "scripts/create-project-symlink.sh",
     "lint": "eslint app",
     "postinstall": "npm run create-project-symlink",
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "start": "scripts/wait_for_db.sh && npm test",
     "self-install": "scripts/self_install.sh",
     "test-mocha": "mocha -r babel-register --recursive app/tests --timeout 5000",
