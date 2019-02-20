@@ -1,8 +1,8 @@
 import arangojs from 'arangojs';
 import bunyan from 'bunyan';
 import config from 'js-abstract-synchronizer/config';
-import urlFormatter from 'url';
 import packageInfo from '../package';
+import urlFormatter from 'url';
 
 const logger = bunyan.createLogger({ name: packageInfo.name });
 const url = urlFormatter.format({

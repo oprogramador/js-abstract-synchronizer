@@ -44,22 +44,6 @@ describe('Serializer', () => {
     expect(() => serializer.create(new Person())).to.throw(InvalidIdError, 'id cannot be empty');
   });
 
-  it('throws InvalidIdError when provided id is an empty string', () => {
-    class Person {
-      constructor() {
-        this.id = '';
-        this.name = 'Alicia';
-      }
-    }
-    const serializer = new Serializer({
-      prototypes: {
-        Person: Person.prototype,
-      },
-      serializerImplementation: new InMemorySerializer(),
-    });
-    expect(() => serializer.create(new Person())).to.throw(InvalidIdError, 'id cannot be empty');
-  });
-
   describe('#configure', () => {
     it('calls serializerImplementation#configure with parameter', () => {
       class Person {
