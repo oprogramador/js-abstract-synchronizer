@@ -89,8 +89,13 @@ describe('Serializer', () => {
         });
         const data = { name: 'Alice' };
         const object = new Person(data);
+
         serializer.create(object);
-        expect(innerValidate.withArgs(data)).to.be.calledOnce();
+
+        expect(innerValidate).to.be.calledOnce();
+        expect(innerValidate.getCall(0).args).to.deep.equal([
+          data,
+        ]);
       });
 
       it('throws the same error when validation fails', () => {
