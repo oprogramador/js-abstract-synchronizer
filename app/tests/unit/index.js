@@ -13,14 +13,14 @@ describe('index', () => {
 
   it('returns SerializerFactory', () => {
     // eslint-disable-next-line global-require
-    const SerializerFactory = require('js-abstract-synchronizer/index').SerializerFactory;
+    const { SerializerFactory } = require('js-abstract-synchronizer/index');
 
     expect(SerializerFactory).to.equal(directSerializerFactory);
   });
 
   it('returns createApp when not in browser', () => {
     // eslint-disable-next-line global-require
-    const createApp = require('js-abstract-synchronizer/index').createApp;
+    const { createApp } = require('js-abstract-synchronizer/index');
 
     expect(createApp).to.equal(directCreateApp);
   });
@@ -28,7 +28,7 @@ describe('index', () => {
   it('does not return createApp when in browser', () => {
     global.window = {};
     // eslint-disable-next-line global-require
-    const createApp = require('js-abstract-synchronizer/index').createApp;
+    const { createApp } = require('js-abstract-synchronizer/index');
 
     expect(createApp).to.be.undefined();
   });

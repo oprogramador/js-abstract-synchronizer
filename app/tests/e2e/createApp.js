@@ -12,15 +12,19 @@ class Person {
     this.name = name;
     this.surname = surname;
   }
+
   getName() {
     return this.name;
   }
+
   getSurname() {
     return this.surname;
   }
+
   setName(name) {
     this.name = name;
   }
+
   setSurname(surname) {
     this.surname = surname;
   }
@@ -63,12 +67,10 @@ describe('serializer API', () => {
     return request(app)
       .post('/object')
       .send(JSON.parse(data))
-      .then(({ body }) =>
-        request(app)
-          .get(`/object/${body.id}`)
-          .expect(HTTPStatus.OK)
-          .expect(({ body: reloadBody }) => expect(reloadBody).to.deep.equal(JSON.parse(data)))
-      );
+      .then(({ body }) => request(app)
+        .get(`/object/${body.id}`)
+        .expect(HTTPStatus.OK)
+        .expect(({ body: reloadBody }) => expect(reloadBody).to.deep.equal(JSON.parse(data))));
   });
 
   it('runs middlewares', () => {

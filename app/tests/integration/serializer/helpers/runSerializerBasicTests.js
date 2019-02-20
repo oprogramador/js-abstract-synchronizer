@@ -17,7 +17,7 @@ export default (createSerializerImplementation) => {
 
       return expect(
         serializerImplementation.configure(newDatabaseName)
-          .then(() => serializerImplementation.configure(newDatabaseName))
+          .then(() => serializerImplementation.configure(newDatabaseName)),
       )
         .to.be.fulfilled();
     });
@@ -112,9 +112,11 @@ export default (createSerializerImplementation) => {
         this.name = 'John';
         this.surname = 'Smith';
       }
+
       getName() {
         return this.name;
       }
+
       getSurname() {
         return this.surname;
       }
@@ -144,12 +146,15 @@ export default (createSerializerImplementation) => {
         this.name = 'John';
         this.surname = 'Smith';
       }
+
       getName() {
         return this.name;
       }
+
       getSurname() {
         return this.surname;
       }
+
       setName(name) {
         this.name = name;
       }

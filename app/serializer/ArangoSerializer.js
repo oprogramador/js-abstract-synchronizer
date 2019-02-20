@@ -17,7 +17,7 @@ export default class ArangoSerializer {
   }
 
   configure(dbName) {
-    const db = this[privates].db;
+    const { db } = this[privates];
     db.useDatabase('_system');
 
     return db.createDatabase(dbName)
@@ -41,7 +41,7 @@ export default class ArangoSerializer {
       .catch(error => Promise.reject(
         error.errorNum === arangoErrorCodes.ERROR_HTTP_NOT_FOUND
           ? new NotFoundError()
-          : error
+          : error,
       ));
   }
 }
