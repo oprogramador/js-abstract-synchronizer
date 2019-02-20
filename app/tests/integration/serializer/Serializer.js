@@ -16,7 +16,7 @@ describe('Serializer', () => {
     class Person {
       constructor() {
         this.id = 123;
-        this.name = 'Alicia';
+        this.name = 'Alice';
       }
     }
     const serializer = new Serializer({
@@ -32,7 +32,7 @@ describe('Serializer', () => {
     class Person {
       constructor() {
         this.id = '';
-        this.name = 'Alicia';
+        this.name = 'Alice';
       }
     }
     const serializer = new Serializer({
@@ -87,7 +87,7 @@ describe('Serializer', () => {
           },
           serializerImplementation: new InMemorySerializer(),
         });
-        const data = { name: 'Alicia' };
+        const data = { name: 'Alice' };
         const object = new Person(data);
         serializer.create(object);
         expect(innerValidate.withArgs(data)).to.be.calledOnce();
@@ -115,7 +115,7 @@ describe('Serializer', () => {
           },
           serializerImplementation: new InMemorySerializer(),
         });
-        const object = new Person({ name: 'Alicia' });
+        const object = new Person({ name: 'Alice' });
         expect(() => serializer.create(object)).to.throw(CustomError);
       });
 
@@ -138,7 +138,7 @@ describe('Serializer', () => {
           },
           serializerImplementation: new InMemorySerializer(),
         });
-        const object = new Person({ name: 'Alicia' });
+        const object = new Person({ name: 'Alice' });
         expect(() => serializer.createFromSerializedData(object)).to.not.throw(Error);
       });
     });
@@ -169,7 +169,7 @@ describe('Serializer', () => {
       const alicia = serializer.createFromSerializedData({
         data: {
           friends: [],
-          name: 'Alicia',
+          name: 'Alice',
         },
         prototypeName: 'Person',
       });
@@ -189,19 +189,19 @@ describe('Serializer', () => {
       });
       alicia.addFriend(bob);
       alicia.addFriend(chris);
-      let newAlicia;
+      let newAlice;
 
       return alicia.save()
         .then(() => {
-          newAlicia = serializer.create({ id: alicia.getId() });
+          newAlice = serializer.create({ id: alicia.getId() });
         })
-        .then(() => newAlicia.reload())
-        .then(() => newAlicia.getFriends().reload())
-        .then(() => newAlicia.getFriends().get(0).reload())
-        .then(() => newAlicia.getFriends().get(1).reload())
+        .then(() => newAlice.reload())
+        .then(() => newAlice.getFriends().reload())
+        .then(() => newAlice.getFriends().get(0).reload())
+        .then(() => newAlice.getFriends().get(1).reload())
         .then(() => {
-          expect(newAlicia.getFriends().get(0).getName()).to.equal('Bob');
-          expect(newAlicia.getFriends().get(1).getName()).to.equal('Chris');
+          expect(newAlice.getFriends().get(0).getName()).to.equal('Bob');
+          expect(newAlice.getFriends().get(1).getName()).to.equal('Chris');
         });
     });
 
@@ -227,7 +227,7 @@ describe('Serializer', () => {
           data: {
             friends: [],
             id: 'foo',
-            name: 'Alicia',
+            name: 'Alice',
           },
           prototypeName: 'Person',
         };
@@ -257,7 +257,7 @@ describe('Serializer', () => {
           data: {
             friends: [],
             id: 'foo',
-            name: 'Alicia',
+            name: 'Alice',
           },
           prototypeName: 'Person',
         };
@@ -283,7 +283,7 @@ describe('Serializer', () => {
           data: {
             friends: [],
             id: 'foo',
-            name: 'Alicia',
+            name: 'Alice',
           },
           prototypeName: 'Person',
         };
@@ -302,7 +302,7 @@ describe('Serializer', () => {
       });
       const alicia = serializer.createFromSerializedData({
         data: {
-          name: 'Alicia',
+          name: 'Alice',
         },
         id: 'a',
         prototypeName: 'Person',
@@ -355,7 +355,7 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person({ id: 'a', name: 'Alicia' }));
+    const alicia = serializer.create(new Person({ id: 'a', name: 'Alice' }));
     const bob = serializer.create(new Person({ id: 'b', name: 'Bob' }));
     const chris = serializer.create(new Person({ name: 'Chris' }));
     const dave = serializer.create(new Person({ name: 'Dave' }));
@@ -400,14 +400,14 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
-    const newAlicia = serializer.create({ id: alicia.getId() });
+    const alicia = serializer.create(new Person('Alice'));
+    const newAlice = serializer.create({ id: alicia.getId() });
     const bob = serializer.create(new Person('Bob'));
     alicia.addFriend(bob);
 
     return alicia.saveWithoutReferences()
-      .then(() => newAlicia.reload())
-      .then(() => expect(newAlicia.getName()).to.equal('Alicia'))
+      .then(() => newAlice.reload())
+      .then(() => expect(newAlice.getName()).to.equal('Alice'))
       .then(() => expect(bob.isDirty()).to.be.true());
   });
 
@@ -437,7 +437,7 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
+    const alicia = serializer.create(new Person('Alice'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
     const dave = serializer.create(new Person('Dave'));
@@ -482,7 +482,7 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
+    const alicia = serializer.create(new Person('Alice'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
     const dave = serializer.create(new Person('Dave'));
@@ -534,7 +534,7 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
+    const alicia = serializer.create(new Person('Alice'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
     alicia.addFriend(bob);
@@ -574,24 +574,24 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
+    const alicia = serializer.create(new Person('Alice'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
     alicia.addFriend(bob);
     alicia.addFriend(chris);
-    let newAlicia;
+    let newAlice;
 
     return alicia.save()
       .then(() => {
-        newAlicia = serializer.create({ id: alicia.getId() });
+        newAlice = serializer.create({ id: alicia.getId() });
       })
-      .then(() => newAlicia.reload())
-      .then(() => newAlicia.getFriends().reload())
-      .then(() => newAlicia.getFriends().get(0).reload())
-      .then(() => newAlicia.getFriends().get(1).reload())
+      .then(() => newAlice.reload())
+      .then(() => newAlice.getFriends().reload())
+      .then(() => newAlice.getFriends().get(0).reload())
+      .then(() => newAlice.getFriends().get(1).reload())
       .then(() => {
-        expect(newAlicia.getFriends().get(0).getName()).to.equal('Bob');
-        expect(newAlicia.getFriends().get(1).getName()).to.equal('Chris');
+        expect(newAlice.getFriends().get(0).getName()).to.equal('Bob');
+        expect(newAlice.getFriends().get(1).getName()).to.equal('Chris');
       });
   });
 
@@ -671,7 +671,7 @@ describe('Serializer', () => {
       serializerImplementation: new InMemorySerializer(),
     });
 
-    const user = serializer.create(new User({ username: 'Alicia' }));
+    const user = serializer.create(new User({ username: 'Alice' }));
     const room = serializer.create(new Room({ name: 'general' }));
     const message = serializer.create(new Message({
       room,
@@ -701,7 +701,7 @@ describe('Serializer', () => {
     const userData = JSON.parse(user.getSerializedCurrentData());
     expect(userData).to.containSubset({
       data: {
-        username: 'Alicia',
+        username: 'Alice',
       },
       id: user.getId(),
       prototypeName: 'User',
@@ -784,7 +784,7 @@ describe('Serializer', () => {
       serializerImplementation: new InMemorySerializer(),
     });
 
-    const user = serializer.create(new User({ username: 'Alicia' }));
+    const user = serializer.create(new User({ username: 'Alice' }));
     const room = serializer.create(new Room({ name: 'general' }));
     const message = serializer.create(new Message({
       room,
@@ -798,7 +798,7 @@ describe('Serializer', () => {
     return message.save()
       .then(() => newUser.reload())
       .then(() => {
-        expect(newUser.getUsername()).to.equal('Alicia');
+        expect(newUser.getUsername()).to.equal('Alice');
       })
       .then(() => newRoom.reload())
       .then(() => {
@@ -824,12 +824,12 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
-    const newAlicia = serializer.create({ id: alicia.getId() });
+    const alicia = serializer.create(new Person('Alice'));
+    const newAlice = serializer.create({ id: alicia.getId() });
 
-    return newAlicia.save()
+    return newAlice.save()
       .then(() => alicia.reload())
-      .then(() => expect(alicia.getId()).to.equal(newAlicia.getId()));
+      .then(() => expect(alicia.getId()).to.equal(newAlice.getId()));
   });
 
   it('does not override children with partial objects', () => {
@@ -862,15 +862,15 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
+    const alicia = serializer.create(new Person('Alice'));
     const bob = serializer.create(new Person('Bob'));
     alicia.addFriend(bob);
-    const newAlicia = serializer.create({ id: alicia.getId() });
+    const newAlice = serializer.create({ id: alicia.getId() });
 
     return alicia.save()
-      .then(() => newAlicia.reload())
-      .then(() => newAlicia.getFriends().reload())
-      .then(() => newAlicia.save())
+      .then(() => newAlice.reload())
+      .then(() => newAlice.getFriends().reload())
+      .then(() => newAlice.save())
       .then(() => bob.reload())
       .then(() => expect(bob.getName()).to.equal('Bob'));
   });
@@ -901,7 +901,7 @@ describe('Serializer', () => {
       },
       serializerImplementation: new InMemorySerializer(),
     });
-    const alicia = serializer.create(new Person('Alicia'));
+    const alicia = serializer.create(new Person('Alice'));
     const bob = serializer.create(new Person('Bob'));
     const chris = serializer.create(new Person('Chris'));
     const dave = serializer.create(new Person('Dave'));

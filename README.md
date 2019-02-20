@@ -52,12 +52,12 @@ const serializer = SerializerFactory.create({
 });
 
 const alicia = serializer.create(new Person({ name: 'alicia', surname: 'aaa', id: 'foo' }));
-const newAlicia = serializer.create({ id: 'foo' });
+const newAlice = serializer.create({ id: 'foo' });
 
 export default serializer.configure('database-name')
   .then(() => alicia.save())
   .then(() => console.log(alicia.getName()))
-  .then(() => newAlicia.reload())
-  .then(() => console.log(newAlicia.getName()))
+  .then(() => newAlice.reload())
+  .then(() => console.log(newAlice.getName()))
 });
 ```
