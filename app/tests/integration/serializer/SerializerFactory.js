@@ -12,12 +12,15 @@ describe('SerializerFactory', () => {
           this.name = 'John';
           this.surname = 'Smith';
         }
+
         getName() {
           return this.name;
         }
+
         getSurname() {
           return this.surname;
         }
+
         setName(name) {
           this.name = name;
         }
@@ -57,12 +60,15 @@ describe('SerializerFactory', () => {
           this.name = 'John';
           this.surname = 'Smith';
         }
+
         getName() {
           return this.name;
         }
+
         getSurname() {
           return this.surname;
         }
+
         setName(name) {
           this.name = name;
         }

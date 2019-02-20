@@ -9,6 +9,6 @@ chai.use(chaiAsPromised);
 chai.use(sinonChai);
 chai.use(dirtyChai);
 
-const expect = chai.expect;
+const { expect } = chai;
 
 export default expect;

@@ -17,7 +17,7 @@ const addArrayMethods = ({ getTargetInnerObject, target }) => {
 export default ({ getTargetInnerObject, prototype, target }) => {
   const allMethodsNames = _.difference(
     _.filter(Object.getOwnPropertyNames(prototype), property => typeof prototype[property] === 'function'),
-    [...Object.getOwnPropertyNames(Object.prototype), 'constructor']
+    [...Object.getOwnPropertyNames(Object.prototype), 'constructor'],
   );
   allMethodsNames.forEach((methodName) => {
     target[methodName] = (...args) => prototype[methodName].apply(getTargetInnerObject(), args);

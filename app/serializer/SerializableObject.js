@@ -62,7 +62,7 @@ export default serializer => class SerializableObject {
     return (
       _.isUndefined(data.prototypeName)
         ? this.reload()
-            .then(() => this[getDataToSerialize]())
+          .then(() => this[getDataToSerialize]())
         : Promise.resolve(data)
     )
       .catch(error => (error instanceof NotFoundError ? data : Promise.reject(error)))
@@ -105,7 +105,7 @@ export default serializer => class SerializableObject {
                 ? oldValue
                 : serializer.create(value);
             }),
-          }
+          },
         );
         this[privates].storedData = _.cloneDeep(newObjectWithReferences);
         this[privates].currentData = _.cloneDeep(newObjectWithReferences);

@@ -88,9 +88,11 @@ describe('Serializer', () => {
           constructor({ name }) {
             this.name = name;
           }
+
           getName() {
             return this.name;
           }
+
           validate(data) {
             innerValidate(data);
           }
@@ -114,9 +116,11 @@ describe('Serializer', () => {
           constructor({ name }) {
             this.name = name;
           }
+
           getName() {
             return this.name;
           }
+
           validate() {
             throw new CustomError();
           }
@@ -136,9 +140,11 @@ describe('Serializer', () => {
           constructor({ name }) {
             this.name = name;
           }
+
           getName() {
             return this.name;
           }
+
           validate() {
           }
         }
@@ -160,9 +166,11 @@ describe('Serializer', () => {
         addFriend(person) {
           this.friends.push(person);
         }
+
         getFriends() {
           return this.friends;
         }
+
         getName() {
           return this.name;
         }
@@ -220,6 +228,7 @@ describe('Serializer', () => {
           getName() {
             return this.name;
           }
+
           validate(data) {
             innerValidate(data);
           }
@@ -249,6 +258,7 @@ describe('Serializer', () => {
           getName() {
             return this.name;
           }
+
           validate() {
             throw new CustomError();
           }
@@ -275,6 +285,7 @@ describe('Serializer', () => {
           getName() {
             return this.name;
           }
+
           validate() {
           }
         }
@@ -384,13 +395,16 @@ describe('Serializer', () => {
       addFriend(person) {
         this.friends.push(person);
       }
+
       constructor(name) {
         this.name = name;
         this.friends = [];
       }
+
       getName() {
         return this.name;
       }
+
       setName(name) {
         this.name = name;
       }
@@ -418,13 +432,16 @@ describe('Serializer', () => {
       addFriend(person) {
         this.friends.push(person);
       }
+
       constructor(name) {
         this.name = name;
         this.friends = [];
       }
+
       getName() {
         return this.name;
       }
+
       setName(name) {
         this.name = name;
       }
@@ -456,16 +473,20 @@ describe('Serializer', () => {
       addFriend(person) {
         this.friends.push(person);
       }
+
       constructor(name) {
         this.name = name;
         this.friends = [];
       }
+
       getName() {
         return this.name;
       }
+
       setName(name) {
         this.name = name;
       }
+
       getFriends() {
         return this.friends;
       }
@@ -508,13 +529,16 @@ describe('Serializer', () => {
       addFriend(person) {
         this.friends.push(person);
       }
+
       constructor(name) {
         this.name = name;
         this.friends = [];
       }
+
       getFriends() {
         return this.friends;
       }
+
       getName() {
         return this.name;
       }
@@ -545,13 +569,16 @@ describe('Serializer', () => {
       addFriend(person) {
         this.friends.push(person);
       }
+
       constructor(name) {
         this.name = name;
         this.friends = [];
       }
+
       getFriends() {
         return this.friends;
       }
+
       getName() {
         return this.name;
       }
@@ -594,15 +621,19 @@ describe('Serializer', () => {
 
         room.addMessage(this);
       }
+
       getText() {
         return this.text;
       }
+
       getSender() {
         return this.sender;
       }
+
       getCreatedAt() {
         return this.createdAt;
       }
+
       getRoom() {
         return this.room;
       }
@@ -614,18 +645,23 @@ describe('Serializer', () => {
         this.users = [];
         this.messages = [];
       }
+
       getName() {
         return this.name;
       }
+
       addUser(user) {
         this.users.push(user);
       }
+
       addMessage(message) {
         this.messages.push(message);
       }
+
       getUsers() {
         return _.clone(this.users);
       }
+
       getMessages() {
         return _.clone(this.messages);
       }
@@ -635,6 +671,7 @@ describe('Serializer', () => {
       constructor({ username }) {
         this.username = username;
       }
+
       getUsername() {
         return this.username;
       }
@@ -697,15 +734,19 @@ describe('Serializer', () => {
 
         room.addMessage(this);
       }
+
       getText() {
         return this.text;
       }
+
       getSender() {
         return this.sender;
       }
+
       getCreatedAt() {
         return this.createdAt;
       }
+
       getRoom() {
         return this.room;
       }
@@ -717,18 +758,23 @@ describe('Serializer', () => {
         this.users = [];
         this.messages = [];
       }
+
       getName() {
         return this.name;
       }
+
       addUser(user) {
         this.users.push(user);
       }
+
       addMessage(message) {
         this.messages.push(message);
       }
+
       getUsers() {
         return this.users;
       }
+
       getMessages() {
         return this.messages;
       }
@@ -738,6 +784,7 @@ describe('Serializer', () => {
       constructor({ username }) {
         this.username = username;
       }
+
       getUsername() {
         return this.username;
       }
@@ -806,16 +853,20 @@ describe('Serializer', () => {
       addFriend(person) {
         this.friends.push(person);
       }
+
       constructor(name) {
         this.name = name;
         this.friends = [];
       }
+
       getName() {
         return this.name;
       }
+
       setName(name) {
         this.name = name;
       }
+
       getFriends() {
         return this.friends;
       }
@@ -845,13 +896,16 @@ describe('Serializer', () => {
       addFriend(person) {
         this.friends.push(person);
       }
+
       constructor(name) {
         this.name = name;
         this.friends = [];
       }
+
       getName() {
         return this.name;
       }
+
       setName(name) {
         this.name = name;
       }
@@ -885,15 +939,19 @@ describe('Serializer', () => {
         this.name = 'John';
         this.surname = 'Smith';
       }
+
       getName() {
         return this.name;
       }
+
       getSurname() {
         return this.surname;
       }
+
       setName(name) {
         this.name = name;
       }
+
       setSurname(surname) {
         this.surname = surname;
       }
@@ -941,9 +999,11 @@ describe('Serializer', () => {
         constructor() {
           this.name = 'John';
         }
+
         getName() {
           return this.name;
         }
+
         setName(name) {
           this.name = name;
         }
