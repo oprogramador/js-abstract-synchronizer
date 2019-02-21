@@ -30,7 +30,7 @@
     "test": "npm run self-install && npm run lint && npm run test-mocha"
   },
   "dependencies": {
-    "arangodb-error-codes": "^1.0.7",
+    "arangodb-error-codes": "^1.0.8",
     "arangojs": "^6.10.0",
     "body-parser": "^1.18.3",
     "bunyan": "^1.8.12",
@@ -58,7 +58,7 @@
     "eslint": "^5.14.1",
     "eslint-config-airbnb-improved": "^4.0.0",
     "faker": "^4.1.0",
-    "mocha": "^6.0.0",
+    "mocha": "^6.0.1",
     "nodemon": "^1.18.10",
     "sinon": "^7.2.4",
     "sinon-chai": "^3.3.0",
