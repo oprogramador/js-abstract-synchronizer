@@ -42,7 +42,7 @@
     "json-schema-filter": "^0.1.5",
     "jsonschema": "^1.2.4",
     "lodash": "^4.17.11",
-    "superagent": "^4.1.0",
+    "superagent": "^5.0.2",
     "superagent-bluebird-promise": "^4.2.0",
     "uuid": "^3.3.2"
   },
